@@ -5,15 +5,7 @@ import { ROUTES } from "../constants/routes";
 import Button from "../components/ui/Button";
 
 const links = [
-  { to: ROUTES.dashboard, label: "Panel", roles: Object.values(ROLES) },
-  { to: ROUTES.users, label: "Usuarios", roles: [ROLES.ADMIN] },
-  { to: ROUTES.candidates, label: "Candidatos", roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC] },
-  { to: ROUTES.appointments, label: "Citas", roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC, ROLES.DOCTOR] },
-  { to: ROUTES.documents, label: "Documentos", roles: Object.values(ROLES) },
-  { to: ROUTES.medicalResults, label: "Resultados", roles: [ROLES.ADMIN, ROLES.DOCTOR, ROLES.CLINIC] },
-  { to: ROUTES.reports, label: "Reportes", roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC] },
-  { to: ROUTES.notifications, label: "Notificaciones", roles: Object.values(ROLES) },
-  { to: ROUTES.audit, label: "Auditoria", roles: [ROLES.ADMIN] }
+  { to: ROUTES.dashboard, label: "Panel", roles: Object.values(ROLES) }
 ];
 
 export default function MainLayout() {
