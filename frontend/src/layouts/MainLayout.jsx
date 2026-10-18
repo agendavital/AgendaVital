@@ -5,7 +5,8 @@ import { ROUTES } from "../constants/routes";
 import Button from "../components/ui/Button";
 
 const links = [
-  { to: ROUTES.dashboard, label: "Panel", roles: Object.values(ROLES) }
+  { to: ROUTES.dashboard, label: "Panel", roles: Object.values(ROLES) },
+  { to: ROUTES.candidates, label: "Candidatos", roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC] }
 ];
 
 export default function MainLayout() {

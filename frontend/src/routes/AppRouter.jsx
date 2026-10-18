@@ -3,6 +3,7 @@ import { ROLES } from "../constants/roles";
 import { ROUTES } from "../constants/routes";
 import MainLayout from "../layouts/MainLayout";
 import PublicLayout from "../layouts/PublicLayout";
+import CandidatesPage from "../pages/CandidatesPage";
 import DashboardPage from "../pages/DashboardPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import LandingPage from "../pages/LandingPage";
@@ -30,6 +31,14 @@ export default function AppRouter() {
           element={
             <RoleRoute allowedRoles={Object.values(ROLES)}>
               <DashboardPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.candidates}
+          element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.HR, ROLES.CLINIC]}>
+              <CandidatesPage />
             </RoleRoute>
           }
         />
