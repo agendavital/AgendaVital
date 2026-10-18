@@ -1,13 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import LoginForm from "../components/forms/LoginForm";
 import { ROUTES } from "../constants/routes";
-import { loginWithCredentials, loginWithGoogle } from "../services/authService";
+import { login, loginGoogle } from "../features/auth/authSlice";
 
 export default function LoginPage() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState("");
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname ?? ROUTES.dashboard;
@@ -25,7 +27,7 @@ export default function LoginPage() {
       setSuccess("");
 
       try {
-        await loginWithGoogle(response.credential);
+        await dispatch(loginGoogle(response.credential)).unwrap();
         setStatus("authenticated");
 
         if (redirectTo === ROUTES.dashboard) {
@@ -68,7 +70,7 @@ export default function LoginPage() {
     }
 
     return () => script?.removeEventListener("load", initializeGoogleButton);
-  }, [navigate, redirectTo]);
+  }, [dispatch, navigate, redirectTo]);
 
   async function handleLogin(values) {
     setStatus("loading");
@@ -76,7 +78,7 @@ export default function LoginPage() {
     setSuccess("");
 
     try {
-      await loginWithCredentials(values);
+      await dispatch(login(values)).unwrap();
       setStatus("authenticated");
 
       if (redirectTo === ROUTES.dashboard) {
