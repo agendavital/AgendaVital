@@ -3,6 +3,7 @@ import { ROLES } from "../constants/roles";
 import { ROUTES } from "../constants/routes";
 import MainLayout from "../layouts/MainLayout";
 import PublicLayout from "../layouts/PublicLayout";
+import AppointmentsPage from "../pages/AppointmentsPage";
 import CandidatesPage from "../pages/CandidatesPage";
 import DashboardPage from "../pages/DashboardPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
@@ -39,6 +40,14 @@ export default function AppRouter() {
           element={
             <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.HR, ROLES.CLINIC]}>
               <CandidatesPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.appointments}
+          element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN, ROLES.HR, ROLES.CLINIC, ROLES.DOCTOR]}>
+              <AppointmentsPage />
             </RoleRoute>
           }
         />
