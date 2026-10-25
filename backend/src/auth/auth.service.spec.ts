@@ -1,6 +1,7 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { hash } from 'bcryptjs';
 import { PrismaService } from '../database/prisma/prisma.service';
+import { JwtAuthGuard } from './JwtAuthGuard';
 import { AuthService } from './auth.service';
 
 describe('AuthService', () => {
@@ -42,6 +43,17 @@ describe('AuthService', () => {
       role: 'ADMIN',
     });
     expect(session.token.split('.')).toHaveLength(3);
+
+    const request: {
+      headers: { authorization: string };
+      user?: { sub: number; role: string };
+    } = { headers: { authorization: `Bearer ${session.token}` } };
+    const context = {
+      switchToHttp: () => ({ getRequest: () => request }),
+    } as unknown as ExecutionContext;
+
+    expect(new JwtAuthGuard().canActivate(context)).toBe(true);
+    expect(request.user).toMatchObject({ sub: 7, role: 'ADMIN' });
     expect(prisma.usuario.update).toHaveBeenCalledWith({
       where: { UsuarioId: 7 },
       data: { UltimoAccesoEn: expect.any(Date) as Date },
