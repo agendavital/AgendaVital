@@ -5,6 +5,7 @@ import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 type LoginBody = {
   email?: unknown;
   password?: unknown;
+  captchaToken?: unknown;
 };
 
 type ForgotPasswordBody = {

@@ -1398,3 +1398,9 @@ th {
     text-align: center;
   }
 }
+
+.recaptcha-widget {
+  transform: scale(0.94);
+  transform-origin: left top;
+  margin-bottom: -5px;
+}

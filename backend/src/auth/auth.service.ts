@@ -31,6 +31,7 @@ const rolePriority = ['ADMIN', 'HR', 'CLINIC', 'DOCTOR', 'CANDIDATE'];
 type LoginInput = {
   email?: unknown;
   password?: unknown;
+  captchaToken?: unknown;
 };
 
 type RecoveryInput = {
@@ -60,6 +61,8 @@ export class AuthService {
   private readonly googleClient = new OAuth2Client();
 
   async login(input: LoginInput) {
+    await this.verifyRecaptcha(input.captchaToken);
+
     const email = this.readEmail(input.email);
     const password = this.readPassword(input.password);
 
@@ -137,6 +140,86 @@ export class AuthService {
       message:
         'Si el correo existe, recibira instrucciones para recuperar la contrasena.',
     };
+  }
+
+  private async verifyRecaptcha(value: unknown): Promise<void> {
+    if (typeof value !== 'string' || value.trim().length === 0) {
+      throw new UnauthorizedException('Completa la verificación reCAPTCHA.');
+    }
+
+    const projectId = process.env.RECAPTCHA_PROJECT_ID;
+    const siteKey = process.env.RECAPTCHA_SITE_KEY;
+    const apiKey = process.env.RECAPTCHA_API_KEY;
+    const allowedHostnames = (process.env.RECAPTCHA_ALLOWED_HOSTNAMES ?? '')
+      .split(',')
+      .map((hostname) => hostname.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (!projectId || !siteKey || !apiKey || allowedHostnames.length === 0) {
+      throw new InternalServerErrorException(
+        'La verificación reCAPTCHA no esta configurada en el backend.',
+      );
+    }
+
+    const url = new URL(
+      `https://recaptchaenterprise.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/assessments`,
+    );
+    url.searchParams.set('key', apiKey);
+
+    type Assessment = {
+      tokenProperties?: {
+        valid?: boolean;
+        hostname?: string;
+      };
+    };
+
+    let assessment: Assessment;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          event: {
+            token: value.trim(),
+            siteKey,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as {
+          error?: { status?: string; message?: string };
+        } | null;
+
+        console.error(
+          '[reCAPTCHA Google API]',
+          response.status,
+          body?.error?.status,
+          body?.error?.message,
+        );
+
+        throw new Error('Google rechazo la evaluación');
+      }
+
+      assessment = (await response.json()) as Assessment;
+    } catch {
+      throw new InternalServerErrorException(
+        'No se pudo validar reCAPTCHA con Google.',
+      );
+    }
+    const tokenProperties = assessment.tokenProperties;
+    const hostname = tokenProperties?.hostname?.toLowerCase();
+
+    if (
+      tokenProperties?.valid !== true ||
+      !hostname ||
+      !allowedHostnames.includes(hostname)
+    ) {
+      throw new UnauthorizedException(
+        'La verificación reCAPTCHA no es valida.',
+      );
+    }
   }
 
   private readEmail(value: unknown) {

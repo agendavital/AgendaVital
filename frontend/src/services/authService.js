@@ -2,10 +2,10 @@ import { apiRequest } from "./apiClient";
 
 const SESSION_KEY = "agendaVitalSession";
 
-export async function loginWithCredentials({ email, password }) {
+export async function loginWithCredentials({ email, password, captchaToken }) {
   const session = await apiRequest("/auth/login", {
     method: "POST",
-    body: JSON.stringify({ email: email.trim(), password })
+    body: JSON.stringify({ email: email.trim(), password, captchaToken })
   });
 
   sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
