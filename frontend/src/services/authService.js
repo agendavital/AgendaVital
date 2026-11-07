@@ -45,3 +45,10 @@ export async function requestPasswordRecovery(email) {
     body: JSON.stringify({ email: email.trim() })
   });
 }
+
+export async function resetPassword({ token, password }) {
+  return apiRequest("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify({ token, password })
+  });
+}

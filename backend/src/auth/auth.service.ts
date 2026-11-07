@@ -4,10 +4,11 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createHmac } from 'node:crypto';
-import { compare } from 'bcryptjs';
+import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { compare, hash } from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
 import { PrismaService } from '../database/prisma/prisma.service';
+import * as nodemailer from 'nodemailer';
 
 const SESSION_DURATION_SECONDS = 60 * 60;
 
@@ -36,6 +37,11 @@ type LoginInput = {
 
 type RecoveryInput = {
   email?: unknown;
+};
+
+type ResetPasswordInput = {
+  token?: unknown;
+  password?: unknown;
 };
 
 type GoogleLoginInput = {
@@ -133,13 +139,174 @@ export class AuthService {
     return this.createSession(usuario);
   }
 
-  requestPasswordRecovery(input: RecoveryInput) {
-    this.readEmail(input.email);
-
-    return {
+  async requestPasswordRecovery(input: RecoveryInput) {
+    const email = this.readEmail(input.email);
+    const genericResponse = {
       message:
-        'Si el correo existe, recibira instrucciones para recuperar la contrasena.',
+        'Si el correo existe, recibira instrucciones para recuperar la contraseña',
     };
+
+    const host = process.env.SMIP_HOST;
+    const port = Number(process.env.SMIP_PORT);
+    const user = process.env.SMIP_USER;
+    const pass = process.env.SMIP_PASS;
+    const from = process.env.SMIP_FROM;
+    const frontendUrl = process.env.FRONTEND_URL;
+
+    if (
+      !host ||
+      !Number.isInteger(port) ||
+      !user ||
+      !pass ||
+      !from ||
+      !frontendUrl
+    ) {
+      throw new InternalServerErrorException(
+        'La configuración del correo de recuperación está incompleta.',
+      );
+    }
+
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { Correo: email },
+      select: {
+        UsuarioId: true,
+        Correo: true,
+        Nombres: true,
+        Activo: true,
+      },
+    });
+
+    if (!usuario || !usuario.Activo) {
+      return genericResponse;
+    }
+
+    const token = randomBytes(32).toString('hex');
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const ahora = new Date();
+    const expiraEn = new Date(ahora.getTime() + 15 * 60 * 1000);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.tokenRecuperacion.updateMany({
+        where: {
+          UsuarioId: usuario.UsuarioId,
+          UsadoEn: null,
+        },
+        data: { UsadoEn: ahora },
+      });
+
+      await tx.tokenRecuperacion.create({
+        data: {
+          UsuarioId: usuario.UsuarioId,
+          TokenHash: tokenHash,
+          ExpiraEn: expiraEn,
+        },
+      });
+    });
+
+    const enlace = new URL('/reset-password', frontendUrl);
+    enlace.searchParams.set('token', token);
+
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: process.env.SMIP_SECURE === 'true',
+      auth: { user, pass },
+    });
+
+    try {
+      await transporter.sendMail({
+        from,
+        to: usuario.Correo,
+        subject: 'Recuperación de contraseña de AgendaVital',
+        text: [
+          `Hola ${usuario.Nombres},`,
+          '',
+          'Recibimos una solicitud para cambiar tu contraseña.',
+          `Abre este enlace dentro de los próximos 15 minutos:
+          ${enlace.toString()}`,
+          '',
+          'Si no solicitastes este cambio, puedes ignorar este correo.',
+        ].join('\n'),
+      });
+    } catch (error) {
+      await this.prisma.tokenRecuperacion.updateMany({
+        where: { TokenHash: tokenHash, UsadoEn: null },
+        data: { UsadoEn: new Date() },
+      });
+
+      const smtpError = error as {
+        code?: unknown;
+        responseCode?: unknown;
+        command?: unknown;
+      };
+
+      console.error('[PasswordRecovery SMTP]', {
+        name: error instanceof Error ? error.name : 'unknownError',
+        code: smtpError.code,
+        responseCode: smtpError.responseCode,
+        command: smtpError.command,
+      });
+    }
+
+    return genericResponse;
+  }
+
+  async resetPassword(input: ResetPasswordInput) {
+    const token = this.readRecoveryToken(input.token);
+    const password = this.readPassword(input.password);
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const ahora = new Date();
+
+    const registro = await this.prisma.tokenRecuperacion.findUnique({
+      where: { TokenHash: tokenHash },
+      select: {
+        TokenRecuperacionId: true,
+        UsuarioId: true,
+        ExpiraEn: true,
+        UsadoEn: true,
+      },
+    });
+
+    if (!registro || registro.UsadoEn || registro.ExpiraEn <= ahora) {
+      throw new UnauthorizedException(
+        'El enlace no es valida, ya venció o ya fue utilizada.',
+      );
+    }
+
+    const hashContrasena = await hash(password, 12);
+
+    await this.prisma.$transaction(async (tx) => {
+      const resultado = await tx.tokenRecuperacion.updateMany({
+        where: {
+          TokenRecuperacionId: registro.TokenRecuperacionId,
+          UsadoEn: null,
+          ExpiraEn: { gt: ahora },
+        },
+        data: { UsadoEn: ahora },
+      });
+
+      if (resultado.count !== 1) {
+        throw new UnauthorizedException(
+          'El enlace no es valida, ya venció o ya fue utilizada.',
+        );
+      }
+
+      await tx.usuario.update({
+        where: { UsuarioId: registro.UsuarioId },
+        data: { HashContrasena: hashContrasena },
+      });
+    });
+
+    return { message: 'La contraseña se actualizó correctamente.' };
+  }
+
+  private readRecoveryToken(value: unknown) {
+    if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) {
+      throw new UnauthorizedException(
+        'El enlace de recuperación no es valida, ya venció o ya fue utilizada.',
+      );
+    }
+    return value;
   }
 
   private async verifyRecaptcha(value: unknown): Promise<void> {

@@ -12,6 +12,11 @@ type ForgotPasswordBody = {
   email?: unknown;
 };
 
+type ResetPasswordBody = {
+  token?: unknown;
+  password?: unknown;
+};
+
 type GoogleLoginBody = {
   credential?: unknown;
 };
@@ -31,6 +36,13 @@ export class AuthController {
   @Throttle({ default: { limit: 3, ttl: 15 * 60_000 } })
   forgotPassword(@Body() body: ForgotPasswordBody) {
     return this.authService.requestPasswordRecovery(body);
+  }
+
+  @Post('reset-password')
+  @UseGuards(ThrottlerGuard)
+  @Throttle({ default: { limit: 5, ttl: 15 * 60_000 } })
+  resetPassword(@Body() body: ResetPasswordBody) {
+    return this.authService.resetPassword(body);
   }
 
   @Post('google')

@@ -9,5 +9,6 @@ export const ROUTES = {
   medicalResults: "/medical-results",
   reports: "/reports",
   notifications: "/notifications",
-  audit: "/audit"
+  audit: "/audit",
+  resetPassword: "/reset-password",
 };
