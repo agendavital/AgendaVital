@@ -9,7 +9,6 @@ import { login, loginGoogle } from "../features/auth/authSlice";
 export default function LoginPage() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,19 +25,11 @@ export default function LoginPage() {
 
       setStatus("loading");
       setError(null);
-      setSuccess("");
 
       try {
         await dispatch(loginGoogle(response.credential)).unwrap();
         setStatus("authenticated");
-
-        if (redirectTo === ROUTES.dashboard) {
-          setSuccess(
-            "Inicio de sesion con Google correcto. El panel se habilitara en una etapa posterior."
-          );
-        } else {
-          navigate(redirectTo, { replace: true });
-        }
+        navigate(redirectTo, { replace: true });
       } catch (loginError) {
         setStatus("error");
         setError(loginError.message);
@@ -83,19 +74,11 @@ export default function LoginPage() {
 
     setStatus("loading");
     setError(null);
-    setSuccess("");
 
     try {
       await dispatch(login({ ...values, captchaToken })).unwrap();
       setStatus("authenticated");
-
-      if (redirectTo === ROUTES.dashboard) {
-        setSuccess(
-          "Inicio de sesion correcto. El panel se habilitara en una etapa posterior."
-        );
-      } else {
-        navigate(redirectTo, { replace: true });
-      }
+      navigate(redirectTo, { replace: true });
     } catch (loginError) {
       setStatus("error");
       setError(
@@ -122,7 +105,6 @@ export default function LoginPage() {
         loading={status === "loading"}
         captcha={<RecaptchaCheckbox onToken={setCaptchaToken} />}
       />
-      {success ? <div className="alert alert-success">{success}</div> : null}
       <div ref={googleButtonRef} className="google-sign-in-button" />
     </div>
   );
