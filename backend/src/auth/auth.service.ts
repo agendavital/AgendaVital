@@ -4,10 +4,11 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { createHmac } from 'node:crypto';
-import { compare } from 'bcryptjs';
+import { createHash, createHmac, randomBytes } from 'node:crypto';
+import { compare, hash } from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
 import { PrismaService } from '../database/prisma/prisma.service';
+import * as nodemailer from 'nodemailer';
 
 const SESSION_DURATION_SECONDS = 60 * 60;
 
@@ -31,10 +32,16 @@ const rolePriority = ['ADMIN', 'HR', 'CLINIC', 'DOCTOR', 'CANDIDATE'];
 type LoginInput = {
   email?: unknown;
   password?: unknown;
+  captchaToken?: unknown;
 };
 
 type RecoveryInput = {
   email?: unknown;
+};
+
+type ResetPasswordInput = {
+  token?: unknown;
+  password?: unknown;
 };
 
 type GoogleLoginInput = {
@@ -60,6 +67,8 @@ export class AuthService {
   private readonly googleClient = new OAuth2Client();
 
   async login(input: LoginInput) {
+    await this.verifyRecaptcha(input.captchaToken);
+
     const email = this.readEmail(input.email);
     const password = this.readPassword(input.password);
 
@@ -130,13 +139,254 @@ export class AuthService {
     return this.createSession(usuario);
   }
 
-  requestPasswordRecovery(input: RecoveryInput) {
-    this.readEmail(input.email);
-
-    return {
+  async requestPasswordRecovery(input: RecoveryInput) {
+    const email = this.readEmail(input.email);
+    const genericResponse = {
       message:
-        'Si el correo existe, recibira instrucciones para recuperar la contrasena.',
+        'Si el correo existe, recibira instrucciones para recuperar la contraseña',
     };
+
+    const host = process.env.SMIP_HOST;
+    const port = Number(process.env.SMIP_PORT);
+    const user = process.env.SMIP_USER;
+    const pass = process.env.SMIP_PASS;
+    const from = process.env.SMIP_FROM;
+    const frontendUrl = process.env.FRONTEND_URL;
+
+    if (
+      !host ||
+      !Number.isInteger(port) ||
+      !user ||
+      !pass ||
+      !from ||
+      !frontendUrl
+    ) {
+      throw new InternalServerErrorException(
+        'La configuración del correo de recuperación está incompleta.',
+      );
+    }
+
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { Correo: email },
+      select: {
+        UsuarioId: true,
+        Correo: true,
+        Nombres: true,
+        Activo: true,
+      },
+    });
+
+    if (!usuario || !usuario.Activo) {
+      return genericResponse;
+    }
+
+    const token = randomBytes(32).toString('hex');
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const ahora = new Date();
+    const expiraEn = new Date(ahora.getTime() + 15 * 60 * 1000);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.tokenRecuperacion.updateMany({
+        where: {
+          UsuarioId: usuario.UsuarioId,
+          UsadoEn: null,
+        },
+        data: { UsadoEn: ahora },
+      });
+
+      await tx.tokenRecuperacion.create({
+        data: {
+          UsuarioId: usuario.UsuarioId,
+          TokenHash: tokenHash,
+          ExpiraEn: expiraEn,
+        },
+      });
+    });
+
+    const enlace = new URL('/reset-password', frontendUrl);
+    enlace.searchParams.set('token', token);
+
+    const transporter = nodemailer.createTransport({
+      host,
+      port,
+      secure: process.env.SMIP_SECURE === 'true',
+      auth: { user, pass },
+    });
+
+    try {
+      await transporter.sendMail({
+        from,
+        to: usuario.Correo,
+        subject: 'Recuperación de contraseña de AgendaVital',
+        text: [
+          `Hola ${usuario.Nombres},`,
+          '',
+          'Recibimos una solicitud para cambiar tu contraseña.',
+          `Abre este enlace dentro de los próximos 15 minutos:
+          ${enlace.toString()}`,
+          '',
+          'Si no solicitastes este cambio, puedes ignorar este correo.',
+        ].join('\n'),
+      });
+    } catch (error) {
+      await this.prisma.tokenRecuperacion.updateMany({
+        where: { TokenHash: tokenHash, UsadoEn: null },
+        data: { UsadoEn: new Date() },
+      });
+
+      const smtpError = error as {
+        code?: unknown;
+        responseCode?: unknown;
+        command?: unknown;
+      };
+
+      console.error('[PasswordRecovery SMTP]', {
+        name: error instanceof Error ? error.name : 'unknownError',
+        code: smtpError.code,
+        responseCode: smtpError.responseCode,
+        command: smtpError.command,
+      });
+    }
+
+    return genericResponse;
+  }
+
+  async resetPassword(input: ResetPasswordInput) {
+    const token = this.readRecoveryToken(input.token);
+    const password = this.readPassword(input.password);
+    const tokenHash = createHash('sha256').update(token).digest('hex');
+    const ahora = new Date();
+
+    const registro = await this.prisma.tokenRecuperacion.findUnique({
+      where: { TokenHash: tokenHash },
+      select: {
+        TokenRecuperacionId: true,
+        UsuarioId: true,
+        ExpiraEn: true,
+        UsadoEn: true,
+      },
+    });
+
+    if (!registro || registro.UsadoEn || registro.ExpiraEn <= ahora) {
+      throw new UnauthorizedException(
+        'El enlace no es valida, ya venció o ya fue utilizada.',
+      );
+    }
+
+    const hashContrasena = await hash(password, 12);
+
+    await this.prisma.$transaction(async (tx) => {
+      const resultado = await tx.tokenRecuperacion.updateMany({
+        where: {
+          TokenRecuperacionId: registro.TokenRecuperacionId,
+          UsadoEn: null,
+          ExpiraEn: { gt: ahora },
+        },
+        data: { UsadoEn: ahora },
+      });
+
+      if (resultado.count !== 1) {
+        throw new UnauthorizedException(
+          'El enlace no es valida, ya venció o ya fue utilizada.',
+        );
+      }
+
+      await tx.usuario.update({
+        where: { UsuarioId: registro.UsuarioId },
+        data: { HashContrasena: hashContrasena },
+      });
+    });
+
+    return { message: 'La contraseña se actualizó correctamente.' };
+  }
+
+  private readRecoveryToken(value: unknown) {
+    if (typeof value !== 'string' || !/^[a-f0-9]{64}$/.test(value)) {
+      throw new UnauthorizedException(
+        'El enlace de recuperación no es valida, ya venció o ya fue utilizada.',
+      );
+    }
+    return value;
+  }
+
+  private async verifyRecaptcha(value: unknown): Promise<void> {
+    if (typeof value !== 'string' || value.trim().length === 0) {
+      throw new UnauthorizedException('Completa la verificación reCAPTCHA.');
+    }
+
+    const projectId = process.env.RECAPTCHA_PROJECT_ID;
+    const siteKey = process.env.RECAPTCHA_SITE_KEY;
+    const apiKey = process.env.RECAPTCHA_API_KEY;
+    const allowedHostnames = (process.env.RECAPTCHA_ALLOWED_HOSTNAMES ?? '')
+      .split(',')
+      .map((hostname) => hostname.trim().toLowerCase())
+      .filter(Boolean);
+
+    if (!projectId || !siteKey || !apiKey || allowedHostnames.length === 0) {
+      throw new InternalServerErrorException(
+        'La verificación reCAPTCHA no esta configurada en el backend.',
+      );
+    }
+
+    const url = new URL(
+      `https://recaptchaenterprise.googleapis.com/v1/projects/${encodeURIComponent(projectId)}/assessments`,
+    );
+    url.searchParams.set('key', apiKey);
+
+    type Assessment = {
+      tokenProperties?: {
+        valid?: boolean;
+        hostname?: string;
+      };
+    };
+
+    let assessment: Assessment;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          event: {
+            token: value.trim(),
+            siteKey,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const body = (await response.json().catch(() => null)) as {
+          error?: { status?: string; message?: string };
+        } | null;
+
+        console.error(
+          '[reCAPTCHA Google API]',
+          response.status,
+          body?.error?.status,
+          body?.error?.message,
+        );
+
+        throw new Error('Google rechazo la evaluación');
+      }
+
+      assessment = (await response.json()) as Assessment;
+    } catch {
+      throw new InternalServerErrorException(
+        'No se pudo validar reCAPTCHA con Google.',
+      );
+    }
+    const tokenProperties = assessment.tokenProperties;
+    const hostname = tokenProperties?.hostname?.toLowerCase();
+
+    if (
+      tokenProperties?.valid !== true ||
+      !hostname ||
+      !allowedHostnames.includes(hostname)
+    ) {
+      throw new UnauthorizedException(
+        'La verificación reCAPTCHA no es valida.',
+      );
+    }
   }
 
   private readEmail(value: unknown) {

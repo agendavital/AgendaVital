@@ -1,19 +1,13 @@
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
-import { ROLES, ROLE_LABELS } from "../constants/roles";
-import { ROUTES } from "../constants/routes";
+import { ROLE_LABELS } from "../constants/roles";
+import { MODULES } from "../constants/navigation";
 import Button from "../components/ui/Button";
-
-const links = [
-  { to: ROUTES.dashboard, label: "Panel", roles: Object.values(ROLES) },
-  { to: ROUTES.candidates, label: "Candidatos", roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC] },
-  { to: ROUTES.appointments, label: "Citas", roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC, ROLES.DOCTOR] }
-];
 
 export default function MainLayout() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
-  const visibleLinks = links.filter((link) => link.roles.includes(user.role));
+  const visibleLinks = MODULES.filter((module) => module.roles.includes(user.role));
 
   function handleLogout() {
     signOut();
@@ -28,9 +22,9 @@ export default function MainLayout() {
           <span>{ROLE_LABELS[user.role]}</span>
         </div>
         <nav>
-          {visibleLinks.map((link) => (
-            <NavLink key={link.to} to={link.to}>
-              {link.label}
+          {visibleLinks.map((module) => (
+            <NavLink key={module.key} to={module.to}>
+              {module.label}
             </NavLink>
           ))}
         </nav>

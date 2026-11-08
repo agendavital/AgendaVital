@@ -2,18 +2,19 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import LoginForm from "../components/forms/LoginForm";
+import RecaptchaCheckbox from "../components/forms/RecatchaCheckbox";
 import { ROUTES } from "../constants/routes";
 import { login, loginGoogle } from "../features/auth/authSlice";
 
 export default function LoginPage() {
   const [status, setStatus] = useState("idle");
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
   const redirectTo = location.state?.from?.pathname ?? ROUTES.dashboard;
   const googleButtonRef = useRef(null);
+  const [captchaToken, setCaptchaToken] = useState("");
 
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
@@ -24,19 +25,11 @@ export default function LoginPage() {
 
       setStatus("loading");
       setError(null);
-      setSuccess("");
 
       try {
         await dispatch(loginGoogle(response.credential)).unwrap();
         setStatus("authenticated");
-
-        if (redirectTo === ROUTES.dashboard) {
-          setSuccess(
-            "Inicio de sesion con Google correcto. El panel se habilitara en una etapa posterior."
-          );
-        } else {
-          navigate(redirectTo, { replace: true });
-        }
+        navigate(redirectTo, { replace: true });
       } catch (loginError) {
         setStatus("error");
         setError(loginError.message);
@@ -73,24 +66,29 @@ export default function LoginPage() {
   }, [dispatch, navigate, redirectTo]);
 
   async function handleLogin(values) {
+    if (!captchaToken) {
+      setStatus("error");
+      setError("Completa el reCAPTCHA antes de ingresar.");
+      return;
+    }
+
     setStatus("loading");
     setError(null);
-    setSuccess("");
 
     try {
-      await dispatch(login(values)).unwrap();
+      await dispatch(login({ ...values, captchaToken })).unwrap();
       setStatus("authenticated");
-
-      if (redirectTo === ROUTES.dashboard) {
-        setSuccess(
-          "Inicio de sesion correcto. El panel se habilitara en una etapa posterior."
-        );
-      } else {
-        navigate(redirectTo, { replace: true });
-      }
+      navigate(redirectTo, { replace: true });
     } catch (loginError) {
       setStatus("error");
-      setError(loginError.message);
+      setError(
+        typeof loginError === "string"
+        ? loginError
+        : loginError?.message ?? "No se pudo iniciar sesión. Intentalo nuevamente."
+      );
+    } finally {
+      setCaptchaToken("");
+      window.grecaptcha?.enterprise?.reset();
     }
   }
 
@@ -105,8 +103,8 @@ export default function LoginPage() {
         onSubmit={handleLogin}
         error={error}
         loading={status === "loading"}
+        captcha={<RecaptchaCheckbox onToken={setCaptchaToken} />}
       />
-      {success ? <div className="alert alert-success">{success}</div> : null}
       <div ref={googleButtonRef} className="google-sign-in-button" />
     </div>
   );

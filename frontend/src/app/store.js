@@ -2,11 +2,13 @@ import { configureStore } from "@reduxjs/toolkit";
 import authReducer from "../features/auth/authSlice";
 import candidatesReducer from "../features/candidates/candidatesSlice";
 import appointmentsReducer from "../features/appointments/appointmentsSlice";
+import dataReducer from "../features/data/dataSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
     candidates: candidatesReducer,
-    appointments: appointmentsReducer
+    appointments: appointmentsReducer,
+    data: dataReducer
   }
 });
