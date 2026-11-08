@@ -14,7 +14,7 @@ export default function CandidatesPage() {
     <section className="page-stack">
       <div className="page-header">
         <div>
-          <p className="eyebrow">Gestion de procesos</p>
+          <p className="eyebrow">Gestión de procesos</p>
           <h1>Candidatos</h1>
         </div>
       </div>

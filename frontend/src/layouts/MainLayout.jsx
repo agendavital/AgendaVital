@@ -18,7 +18,7 @@ export default function MainLayout() {
     <div className="app-shell">
       <aside className="sidebar">
         <div className="sidebar-brand">
-          <strong>Agenda Vital</strong>
+          <strong>AgendaVital</strong>
           <span>{ROLE_LABELS[user.role]}</span>
         </div>
         <nav>

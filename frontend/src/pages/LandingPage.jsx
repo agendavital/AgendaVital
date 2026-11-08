@@ -70,27 +70,27 @@ const testimonials = [
 
 const faqs = [
   {
-    question: "Cuanto cuesta Agenda Vital?",
+    question: "¿Cuánto cuesta Agenda Vital?",
     answer:
       "Ofrecemos planes adaptados al tamano de tu empresa. Contactanos para recibir una cotizacion personalizada sin costo. La demo inicial es completamente gratuita."
   },
   {
-    question: "Como se protege el historial medico de los empleados?",
+    question: "¿Cómo se protege el historial medico de los empleados?",
     answer:
       "Toda la informacion se almacena cifrada y solo es accesible por usuarios autorizados segun su rol. El diseno contempla buenas practicas de proteccion de datos personales y confidencialidad medica."
   },
   {
-    question: "Necesito instalar algo en mis equipos?",
+    question: "¿Necesito instalar algo en mis equipos?",
     answer:
       "No. Agenda Vital es una plataforma 100% web. Solo necesitas un navegador moderno y conexion a internet. Tambien funciona desde dispositivos moviles."
   },
   {
-    question: "Puedo migrar la informacion de mis sistemas actuales?",
+    question: "¿Puedo migrar la informacion de mis sistemas actuales?",
     answer:
       "Si. La arquitectura propuesta permite preparar procesos de migracion desde Excel u otros sistemas manteniendo validacion y trazabilidad."
   },
   {
-    question: "Cuanto tiempo toma la implementacion?",
+    question: "¿Cuánto tiempo toma la implementacion?",
     answer:
       "El tiempo promedio de implementacion inicial es de 1 a 2 semanas, dependiendo del tamano de la empresa, datos historicos y configuracion requerida."
   }
@@ -227,7 +227,7 @@ export default function LandingPage() {
       </section>
 
       <section id="beneficios" className="landing-section beneficios-section">
-        <span className="etiqueta-seccion">Por que Agenda Vital?</span>
+        <span className="etiqueta-seccion">¿Por qué Agenda Vital?</span>
         <h2 className="titulo-seccion">Todo lo que necesita tu empresa</h2>
         <p className="subtitulo-seccion">
           Disenado para equipos de salud ocupacional que quieren dejar atras las hojas de calculo
@@ -283,7 +283,7 @@ export default function LandingPage() {
             <ul className="contacto-puntos">
               <ContactPoint icon="✅" title="Demo personalizada" text="Adaptada al tamano y sector de tu empresa" />
               <ContactPoint icon="🤝" title="Sin compromiso" text="La demo es completamente gratuita" />
-              <ContactPoint icon="⏱" title="Respuesta en 24 horas" text="contacto@agendavital.co - +57 300 000 0000" />
+              <ContactPoint icon="🕛" title="Respuesta en 24 horas" text="agendavital0@gmail.com - +57 300 000 0000" />
             </ul>
           </div>
 
@@ -316,7 +316,7 @@ export default function LandingPage() {
                     className={errors.empresa ? "error" : ""}
                   />
                 </LandingField>
-                <LandingField label="Correo electronico *" error={errors.correo}>
+                <LandingField label="Correo electrónico *" error={errors.correo}>
                   <input
                     name="correo"
                     type="email"
@@ -326,7 +326,7 @@ export default function LandingPage() {
                     className={errors.correo ? "error" : ""}
                   />
                 </LandingField>
-                <LandingField label="Telefono opcional">
+                <LandingField label="Teléfono (opcional)">
                   <input
                     name="telefono"
                     type="tel"
@@ -335,7 +335,7 @@ export default function LandingPage() {
                     placeholder="+57 300 000 0000"
                   />
                 </LandingField>
-                <LandingField label="Que necesitas gestionar? *" error={errors.mensaje}>
+                <LandingField label="¿Qué necesitas gestionar? *" error={errors.mensaje}>
                   <textarea
                     name="mensaje"
                     value={form.mensaje}
@@ -360,11 +360,23 @@ export default function LandingPage() {
             const active = activeFaq === index;
             return (
               <article className={`faq-item ${active ? "activo" : ""}`} key={faq.question}>
-                <button className="faq-pregunta" onClick={() => setActiveFaq(active ? null : index)}>
+                <button
+                  id={`faq-question-${index}`}
+                  type="button"
+                  className="faq-pregunta"
+                  aria-expanded={active}
+                  aria-controls={`faq-answer-${index}`}
+                  onClick={() => setActiveFaq(active ? null : index)}
+                >
                   {faq.question}
-                  <span className="faq-icono">+</span>
+                  <span className="faq-icono" aria-hidden="true" />
                 </button>
-                <div className="faq-respuesta">
+                <div
+                  id={`faq-answer-${index}`}
+                  className="faq-respuesta"
+                  role="region"
+                  aria-labelledby={`faq-question-${index}`}
+                >
                   <p>{faq.answer}</p>
                 </div>
               </article>
