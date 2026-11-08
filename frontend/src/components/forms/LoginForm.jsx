@@ -5,7 +5,7 @@ import Field from "../ui/Field";
 import { validateLogin } from "../../utils/validators";
 import { ROUTES } from "../../constants/routes";
 
-export default function LoginForm({ onSubmit, error, loading }) {
+export default function LoginForm({ onSubmit, error, loading, captcha }) {
   const [values, setValues] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
 
@@ -34,6 +34,9 @@ export default function LoginForm({ onSubmit, error, loading }) {
           autoComplete="current-password"
         />
       </Field>
+
+      {captcha}
+      
       {error ? <div className="alert alert-error">{error}</div> : null}
       <Button type="submit" disabled={loading}>{loading ? "Validando..." : "Ingresar"}</Button>
       <Link className="link" to={ROUTES.forgotPassword}>Recuperar contrasena</Link>

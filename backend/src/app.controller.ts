@@ -1,4 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from './auth/JwtAuthGuard';
+import { Roles } from './auth/roles.decorator';
+import { RolesGuard } from './auth/roles.guard';
 import { PrismaService } from './database/prisma/prisma.service';
 
 @Controller()
@@ -11,6 +14,8 @@ export class AppController {
   }
 
   @Get('prueba-db')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   async pruebaDB() {
     const usuarios = await this.prisma.usuario.findMany({
       take: 5,
