@@ -93,7 +93,7 @@ html {
   transform: translateY(-1px);
 }
 
-.landing-nav-cta,
+.landing-nav-links a.landing-nav-cta,
 .landing-mobile-menu .landing-nav-cta {
   padding: 0.45rem 1.1rem;
   border-radius: 6px;
@@ -105,7 +105,8 @@ html {
   transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
 }
 
-.landing-nav-cta:hover {
+.landing-nav-links  a.landing-nav-cta:hover,
+.landing-mobile-menu .landing-nav-cta:hover {
   background: var(--verde-claro);
   color: var(--blanco);
   box-shadow: 0 12px 26px rgba(26, 155, 108, 0.26);
@@ -772,6 +773,7 @@ html {
 }
 
 .faq-icono {
+  position: relative;
   width: 24px;
   height: 24px;
   display: flex;
@@ -781,14 +783,35 @@ html {
   border-radius: 50%;
   background: var(--verde-suave);
   color: var(--verde);
-  font-size: 1.1rem;
-  transition: transform 0.3s, background 0.2s;
+  transition: background 0.2s, color 0.2s;
+}
+
+.faq-icono::before,
+.faq-icono::after {
+  content: "";
+  position: absolute;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.faq-icono::before {
+  width: 12px;
+  height: 2px;
+}
+
+.faq-icono::after {
+  width: 2px;
+  height: 12px;
 }
 
 .faq-item.activo .faq-icono {
   background: var(--verde);
   color: var(--blanco);
-  transform: rotate(45deg);
+}
+
+.faq-item.activo .faq-icono::after {
+  transform: scaleY(0);
 }
 
 .faq-respuesta {
@@ -808,6 +831,17 @@ html {
   color: var(--gris-600);
   font-size: 0.9rem;
   line-height: 1.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item,
+  .faq-pregunta,
+  .faq-icono,
+  .faq-icono::before,
+  .faq-icono::after,
+  .faq-respuesta {
+    transition: none;
+  }
 }
 
 .landing-footer {
@@ -917,6 +951,20 @@ html {
   margin: 8px 0 16px;
   font-size: clamp(40px, 6vw, 76px);
   letter-spacing: 0;
+}
+
+.brand-panel .eyebrow {
+  display: inline-block;
+  margin: 0 0 0.5rem;
+  padding: 0.45rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 999px;
+  background: rgba(10, 42, 60, 0.58);
+  color: #ecfdf5;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1.4;
 }
 
 .brand-panel p {

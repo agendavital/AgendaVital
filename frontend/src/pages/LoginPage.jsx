@@ -97,7 +97,7 @@ export default function LoginPage() {
       <Link className="auth-home-link" to="/">
         ← Volver al inicio
       </Link>
-      <h2>Inicio de sesion</h2>
+      <h2>Inicio de sesión</h2>
       <p>Acceso seguro por usuario, contrasena y rol.</p>
       <LoginForm
         onSubmit={handleLogin}
