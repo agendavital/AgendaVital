@@ -46,6 +46,7 @@ export class AuthController {
   }
 
   @Post('google')
+  @UseGuards(ThrottlerGuard)
   loginWithGoogle(@Body() body: GoogleLoginBody) {
     return this.authService.loginWithGoogle(body);
   }
