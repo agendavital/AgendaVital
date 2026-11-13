@@ -29,7 +29,7 @@ export default function ForgotPasswordPage() {
       setMessage(response.message);
     } catch (requestError) {
       setError(
-        request.message ||
+        requestError.message ||
         "No se pudo procesar la solicitud. Inténtalo de nuevo.",
       );
     } finally {
