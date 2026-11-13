@@ -1,5 +1,6 @@
 import { ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { hash } from 'bcryptjs';
+import { jest } from '@jest/globals';
 import { PrismaService } from '../database/prisma/prisma.service';
 import { JwtAuthGuard } from './JwtAuthGuard';
 import { AuthService } from './auth.service';
@@ -7,8 +8,8 @@ import { AuthService } from './auth.service';
 describe('AuthService', () => {
   const prisma = {
     usuario: {
-      findUnique: jest.fn(),
-      update: jest.fn(),
+      findUnique: jest.fn<() => Promise<unknown>>(),
+      update: jest.fn<() => Promise<unknown>>(),
     },
   };
   let service: AuthService;
