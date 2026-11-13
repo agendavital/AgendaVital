@@ -1,75 +1,42 @@
-# React + TypeScript + Vite
+# Frontend de AgendaVital
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplicación web construida con React y Vite. Se comunica con la API de AgendaVital mediante solicitudes HTTP en JSON.
 
-Currently, two official plugins are available:
+## Requisitos y configuración
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Instala una versión de Node.js compatible con el proyecto. Copia `frontend/.env.example` como `frontend/.env.local` y configura las direcciones e identificadores públicos de desarrollo. Vite expone al navegador las variables que comienzan con `VITE_`; nunca pongas contraseñas, secretos JWT, secretos OAuth ni claves privadas en esas variables.
 
-## React Compiler
+Variables usadas por el frontend:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- `VITE_API_BASE_URL`: URL base de la API, por ejemplo `http://localhost:3000/api` en desarrollo local.
+- `VITE_GOOGLE_CLIENT_ID`: identificador público del cliente OAuth web.
+- `VITE_RECAPTCHA_SITE_KEY`: clave pública del sitio reCAPTCHA.
 
-## Expanding the ESLint configuration
+Después de cambiar un archivo `.env.local`, reinicia Vite para cargar los valores nuevos.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Ejecutar en desarrollo
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Desde esta carpeta:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Vite muestra en la terminal la URL local, normalmente `http://localhost:5173`. Si el puerto está ocupado, revisa la URL que Vite informa antes de agregar ese origen a Google Cloud.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Compilar y revisar
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run build
+npm run preview
+npm run lint
 ```
+
+`npm run preview` sirve localmente la compilación de producción. Estos comandos no implican que la API o SQL Server estén ejecutándose.
+
+## Sesión y API
+
+El servicio HTTP usa `VITE_API_BASE_URL`. La sesión actual se guarda en `sessionStorage` y el cliente agrega el JWT como encabezado `Authorization: Bearer`. El uso de cookies seguras es un pendiente documentado en `docs/arquitectura-y-seguridad.md`.
+
+En Docker, el frontend se sirve por Nginx y su URL pública suele ser `http://localhost:8080`. La configuración actual de Compose todavía no pasa las variables de Google y reCAPTCHA al build del frontend.
