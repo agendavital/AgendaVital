@@ -1,13 +1,13 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3000/api";
-const SESSION_KEY = "agendaVitalSession";
+const CSRF_COOKIE_NAME = "agenda_vital_csrf";
 
-function getStoredToken() {
-  if (typeof window === "undefined") return null;
-
+function getCookie(name) {
+  if (typeof document === "undefined") return null;
+  const prefix = `${name}=`;
+  const item = document.cookie.split(";").map((part) => part.trim()).find((part) => part.startsWith(prefix));
+  if (!item) return null;
   try {
-    const session = JSON.parse(window.sessionStorage.getItem(SESSION_KEY) ?? "null");
-    if (!session?.token || session.expiresAt <= Date.now()) return null;
-    return session.token;
+    return decodeURIComponent(item.slice(prefix.length));
   } catch {
     return null;
   }
@@ -19,14 +19,18 @@ export async function apiRequest(path, options = {}) {
     headers.set("Content-Type", "application/json");
   }
 
-  const token = getStoredToken();
-  if (token && !headers.has("Authorization")) {
-    headers.set("Authorization", `Bearer ${token}`);
+  const method = (options.method ?? "GET").toUpperCase();
+  if (!["GET", "HEAD", "OPTIONS"].includes(method)) {
+    const csrfToken = getCookie(CSRF_COOKIE_NAME);
+    if (csrfToken && !headers.has("X-CSRF-Token")) {
+      headers.set("X-CSRF-Token", csrfToken);
+    }
   }
 
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...options,
-    headers
+    headers,
+    credentials: "include"
   });
 
   const payload = await response.json().catch(() => null);
@@ -36,7 +40,9 @@ export async function apiRequest(path, options = {}) {
       ? payload.message.join(" ")
       : payload?.message;
 
-    throw new Error(message ?? "Error consultando el servicio.");
+    const error = new Error(message ?? "Error consultando el servicio.");
+    error.status = response.status;
+    throw error;
   }
 
   return payload;

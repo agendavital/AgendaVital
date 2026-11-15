@@ -34,7 +34,7 @@ flowchart LR
     subgraph C3[Datos]
       SQL[(SQL Server)]
     end
-    F -->|HTTP /api, JSON y Bearer token| A
+    F -->|HTTP /api, JSON y cookie HttpOnly| A
     DBM -->|Adaptador MSSQL| SQL
     AU --> G[Google Identity Services]
     AU --> RC[reCAPTCHA Enterprise]
@@ -74,7 +74,8 @@ Los límites están configurados con `@nestjs/throttler`. Su almacenamiento es l
 2. La API valida el token contra reCAPTCHA Enterprise y compara el hostname con la lista permitida.
 3. La API busca una cuenta activa y compara la contraseña con el hash almacenado mediante `bcryptjs`.
 4. Si la cuenta tiene un rol reconocido, se genera un JWT firmado con HS256 y duración de una hora.
-5. El frontend guarda la sesión en `sessionStorage` y envía el JWT como `Authorization: Bearer ...` en las solicitudes posteriores.
+5. La API entrega el JWT en una cookie `HttpOnly`, `SameSite=Lax` y con `Secure` en producción; el navegador la envía automáticamente. El frontend consulta `/api/auth/session` al iniciar para restaurar el usuario sin leer el JWT.
+6. En solicitudes autenticadas que cambian datos, el frontend envía además `X-CSRF-Token`. El backend verifica que coincida con la cookie CSRF y que su firma esté vinculada al JWT de sesión.
 
 ### Google
 
@@ -96,7 +97,9 @@ Si el envío SMTP falla, la API registra información técnica limitada en la co
 
 ## 5. Controles implementados
 
-- Verificación de JWT Bearer en `JwtAuthGuard`: valida formato, firma HMAC en tiempo constante, algoritmo, campos requeridos, rol, fechas y expiración.
+- Verificación del JWT de cookie en `JwtAuthGuard`: valida formato, firma HMAC en tiempo constante, algoritmo, campos requeridos, rol, fechas y expiración.
+- Cookie de sesión `HttpOnly`, `SameSite=Lax`, `Path=/api` y `Secure` en producción; logout elimina las cookies.
+- Defensa CSRF para solicitudes autenticadas que cambian datos, con token firmado ligado al JWT y comprobación de origen permitido para métodos no seguros.
 - Autorización por rol en `RolesGuard`; el endpoint de diagnóstico `GET /api/prueba-db` exige el rol `ADMIN`.
 - Hash de contraseñas con `bcryptjs`; el restablecimiento usa un costo de 12.
 - Límites de solicitudes distintos para login, Google, solicitud de recuperación y cambio de contraseña.
@@ -109,7 +112,6 @@ Si el envío SMTP falla, la API registra información técnica limitada en la co
 
 Estos puntos no deben describirse como funciones ya completadas:
 
-- **Cookies seguras:** actualmente el JWT queda en `sessionStorage`; no se usa cookie `HttpOnly`, `Secure` o `SameSite`. Una migración requiere decidir también protección CSRF y cambios coordinados en frontend y backend.
 - **Renovación de sesión:** el JWT dura una hora y no se encontró un flujo de refresh token.
 - **Cabeceras HTTP:** no se encontró configuración de Helmet en el arranque revisado.
 - **Validación de entrada:** no se encontró un `ValidationPipe` global; parte de la validación se hace manualmente en `AuthService`.
@@ -139,14 +141,15 @@ La configuración de Docker debe revisarse por separado: las variables del backe
 
 ## 8. Evidencia y verificación
 
-La documentación se contrastó con los archivos de referencia indicados en cada sección. En esta actualización no se ejecutaron build, pruebas automatizadas ni pruebas de despliegue; por tanto, este documento describe el código observado, no certifica una ejecución reciente.
+La documentación se contrastó con los archivos de referencia indicados en cada sección. La compilación del backend terminó correctamente. La compilación del frontend no pudo iniciarse porque el entorno rechazó la creación del proceso de esbuild (`spawn EPERM`). No se ejecutaron pruebas automatizadas ni pruebas de despliegue. La verificación manual en navegador confirmó que el login entrega las cookies de sesión y CSRF, que `GET /api/auth/session` responde `200` después de recargar y que cerrar sesión devuelve las rutas protegidas al login. La respuesta `403` de CSRF no se verificó de extremo a extremo porque el backend todavía no expone una ruta de escritura de negocio protegida por sesión.
 
 Para una entrega verificable, adjuntar evidencia separada de:
 
-1. Respuesta `401` al solicitar una ruta protegida sin JWT y respuesta permitida con un token válido del rol autorizado.
-2. Respuestas `429` al superar los límites de autenticación configurados.
-3. Token reCAPTCHA aceptado/rechazado por el backend y hostname configurado.
-4. Correo de recuperación recibido, enlace vencido/reutilizado rechazado y contraseña nueva aceptada en login.
-5. Inicio de los servicios y conexión real a SQL Server en el modo de ejecución que se presente.
+1. Respuesta `401` al solicitar una ruta protegida sin cookie de sesión y respuesta permitida con una sesión válida del rol autorizado.
+2. Respuesta `403` al enviar una solicitud autenticada que cambia datos sin el token CSRF correcto.
+3. Respuestas `429` al superar los límites de autenticación configurados.
+4. Token reCAPTCHA aceptado/rechazado por el backend y hostname configurado.
+5. Correo de recuperación recibido, enlace vencido/reutilizado rechazado y contraseña nueva aceptada en login.
+6. Inicio de los servicios y conexión real a SQL Server en el modo de ejecución que se presente.
 
 No incluir en capturas o documentación contraseñas, tokens, secretos JWT, claves API, secretos OAuth ni archivos `.env` reales.

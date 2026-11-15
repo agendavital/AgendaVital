@@ -46,9 +46,13 @@ describe('AuthService', () => {
     expect(session.token.split('.')).toHaveLength(3);
 
     const request: {
-      headers: { authorization: string };
+      method: string;
+      headers: { cookie: string };
       user?: { sub: number; role: string };
-    } = { headers: { authorization: `Bearer ${session.token}` } };
+    } = {
+      method: 'GET',
+      headers: { cookie: `agenda_vital_session=${session.token}` },
+    };
     const context = {
       switchToHttp: () => ({ getRequest: () => request }),
     } as unknown as ExecutionContext;

@@ -1,12 +1,18 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import type { Request } from 'express';
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import {
+  ACCESS_COOKIE_NAME,
+  hasValidCsrfToken,
+  readCookie,
+} from './session-cookies';
 
 type JwtPayload = {
   sub: number;
@@ -31,14 +37,11 @@ export class JwtAuthGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
 
-    const authorization = request.headers.authorization;
-    const match = authorization?.match(/^Bearer\s+(\S+)$/i);
-
-    if (!match) {
+    const token = readCookie(request, ACCESS_COOKIE_NAME);
+    if (!token) {
       throw new UnauthorizedException('Se requiere un token de acceso.');
     }
 
-    const token = match[1];
     const parts = token.split('.');
 
     if (
@@ -112,6 +115,13 @@ export class JwtAuthGuard implements CanActivate {
 
     if (payload.exp <= now) {
       throw new UnauthorizedException('El token ha expirado.');
+    }
+
+    if (
+      !['GET', 'HEAD', 'OPTIONS'].includes(request.method.toUpperCase()) &&
+      !hasValidCsrfToken(request, token)
+    ) {
+      throw new ForbiddenException('La verificacion CSRF no es valida.');
     }
 
     request.user = payload as JwtPayload;

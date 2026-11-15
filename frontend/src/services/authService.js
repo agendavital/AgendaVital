@@ -1,42 +1,41 @@
 import { apiRequest } from "./apiClient";
 
-const SESSION_KEY = "agendaVitalSession";
-
 export async function loginWithCredentials({ email, password, captchaToken }) {
-  const session = await apiRequest("/auth/login", {
+  return apiRequest("/auth/login", {
     method: "POST",
     body: JSON.stringify({ email: email.trim(), password, captchaToken })
   });
-
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  return session;
 }
 
 export async function loginWithGoogle(credential) {
-  const session = await apiRequest("/auth/google", {
+  return apiRequest("/auth/google", {
     method: "POST",
     body: JSON.stringify({ credential })
   });
-
-  sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-  return session;
 }
 
-export function getStoredSession() {
-  const raw = sessionStorage.getItem(SESSION_KEY);
-  if (!raw) return null;
-
-  const session = JSON.parse(raw);
-  if (session.expiresAt < Date.now()) {
-    sessionStorage.removeItem(SESSION_KEY);
-    return null;
+export async function getCurrentSession() {
+  clearSession();
+  try {
+    return await apiRequest("/auth/session", { cache: "no-store" });
+  } catch (error) {
+    if (error.status === 401) return null;
+    throw error;
   }
-
-  return session;
 }
 
 export function clearSession() {
-  sessionStorage.removeItem(SESSION_KEY);
+  if (typeof window !== "undefined") {
+    window.sessionStorage.removeItem("agendaVitalSession");
+  }
+}
+
+export async function logoutSession() {
+  try {
+    await apiRequest("/auth/logout", { method: "POST" });
+  } finally {
+    clearSession();
+  }
 }
 
 export async function requestPasswordRecovery(email) {

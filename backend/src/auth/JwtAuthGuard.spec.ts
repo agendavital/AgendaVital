@@ -43,13 +43,16 @@ function createToken(
   return `${header}.${payload}.${signature}`;
 }
 
-function createContext(authorization?: string) {
+function createContext(accessToken?: string) {
   const request: {
-    headers: { authorization?: string };
+    method: string;
+    headers: { cookie?: string };
     user?: TestPayload;
-  } = { headers: {} };
+  } = { method: 'GET', headers: {} };
 
-  if (authorization) request.headers.authorization = authorization;
+  if (accessToken) {
+    request.headers.cookie = `agenda_vital_session=${accessToken}`;
+  }
 
   const context = {
     switchToHttp: () => ({ getRequest: () => request }),
@@ -77,7 +80,7 @@ describe('JwtAuthGuard', () => {
 
   it('acepta un token valido y adjunta sus claims a la solicitud', () => {
     const token = createToken();
-    const { context, request } = createContext(`Bearer ${token}`);
+    const { context, request } = createContext(token);
 
     expect(guard.canActivate(context)).toBe(true);
     expect(request.user).toMatchObject({ sub: 42, role: 'ADMIN' });
@@ -90,14 +93,14 @@ describe('JwtAuthGuard', () => {
   });
 
   it('rechaza un token con formato invalido', () => {
-    const { context } = createContext('Bearer no-es-un-jwt');
+    const { context } = createContext('no-es-un-jwt');
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
   });
 
   it('rechaza una firma incorrecta', () => {
     const token = createToken({ secret: 'a-different-secret' });
-    const { context } = createContext(`Bearer ${token}`);
+    const { context } = createContext(token);
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
   });
@@ -107,14 +110,14 @@ describe('JwtAuthGuard', () => {
     const token = createToken({
       payload: { sub: 42, role: 'ADMIN', iat: now - 120, exp: now - 60 },
     });
-    const { context } = createContext(`Bearer ${token}`);
+    const { context } = createContext(token);
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
   });
 
   it('rechaza algoritmos distintos de HS256', () => {
     const token = createToken({ algorithm: 'none' });
-    const { context } = createContext(`Bearer ${token}`);
+    const { context } = createContext(token);
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
   });
@@ -124,7 +127,7 @@ describe('JwtAuthGuard', () => {
     const token = createToken({
       payload: { sub: 42, role: 'UNKNOWN', iat: now, exp: now + 3600 },
     });
-    const { context } = createContext(`Bearer ${token}`);
+    const { context } = createContext(token);
 
     expect(() => guard.canActivate(context)).toThrow(UnauthorizedException);
   });
@@ -132,7 +135,7 @@ describe('JwtAuthGuard', () => {
   it('falla con error de servidor si falta JWT_SECRET', () => {
     delete process.env.JWT_SECRET;
     const token = createToken();
-    const { context } = createContext(`Bearer ${token}`);
+    const { context } = createContext(token);
 
     expect(() => guard.canActivate(context)).toThrow(
       InternalServerErrorException,

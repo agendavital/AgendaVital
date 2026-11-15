@@ -1,6 +1,21 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
+import type { Request, Response } from 'express';
+import { clearSessionCookies, setSessionCookies } from './session-cookies';
+import { JwtAuthGuard } from './JwtAuthGuard';
+
+type AuthenticatedRequest = Request & {
+  user: { sub: number };
+};
 
 type LoginBody = {
   email?: unknown;
@@ -27,8 +42,11 @@ export class AuthController {
 
   @Post('login')
   @UseGuards(ThrottlerGuard)
-  login(@Body() body: LoginBody) {
-    return this.authService.login(body);
+  async login(
+    @Body() body: LoginBody,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.issueSession(response, await this.authService.login(body));
   }
 
   @Post('forgot-password')
@@ -47,7 +65,39 @@ export class AuthController {
 
   @Post('google')
   @UseGuards(ThrottlerGuard)
-  loginWithGoogle(@Body() body: GoogleLoginBody) {
-    return this.authService.loginWithGoogle(body);
+  async loginWithGoogle(
+    @Body() body: GoogleLoginBody,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    return this.issueSession(
+      response,
+      await this.authService.loginWithGoogle(body),
+    );
+  }
+
+  @Get('session')
+  @UseGuards(JwtAuthGuard)
+  getSession(
+    @Req() request: AuthenticatedRequest,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    // Session responses must never be reused or conditionally answered with 304.
+    request.headers['cache-control'] = 'no-cache';
+    response.setHeader('Cache-Control', 'no-store, private');
+    return this.authService.getCurrentSession(request.user.sub);
+  }
+
+  @Post('logout')
+  logout(@Res({ passthrough: true }) response: Response) {
+    clearSessionCookies(response);
+    return { message: 'La sesion se cerro correctamente.' };
+  }
+
+  private issueSession(
+    response: Response,
+    session: { token: string; user: unknown; expiresAt: number },
+  ) {
+    setSessionCookies(response, session.token);
+    return { user: session.user, expiresAt: session.expiresAt };
   }
 }

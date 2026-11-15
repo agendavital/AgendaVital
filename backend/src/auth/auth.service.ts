@@ -139,6 +139,19 @@ export class AuthService {
     return this.createSession(usuario);
   }
 
+  async getCurrentSession(userId: number) {
+    const usuario = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      include: { UsuarioRol: { include: { Rol: true } } },
+    });
+
+    if (!usuario || !usuario.Activo) {
+      throw new UnauthorizedException('La sesion ya no esta activa.');
+    }
+
+    return { user: this.toSessionUser(usuario) };
+  }
+
   async requestPasswordRecovery(input: RecoveryInput) {
     const email = this.readEmail(input.email);
     const genericResponse = {
@@ -421,6 +434,28 @@ export class AuthService {
   }
 
   private async createSession(usuario: UsuarioConRoles) {
+    const user = this.toSessionUser(usuario);
+
+    const now = Math.floor(Date.now() / 1000);
+    const expiresAt = (now + SESSION_DURATION_SECONDS) * 1000;
+
+    await this.prisma.usuario.update({
+      where: { UsuarioId: usuario.UsuarioId },
+      data: { UltimoAccesoEn: new Date() },
+    });
+
+    return {
+      token: this.createAccessToken({
+        sub: usuario.UsuarioId,
+        role: user.role,
+        iat: now,
+      }),
+      user,
+      expiresAt,
+    };
+  }
+
+  private toSessionUser(usuario: UsuarioConRoles) {
     const roles = usuario.UsuarioRol.map(
       ({ Rol }) => roleAliases[Rol.Codigo.trim().toUpperCase()],
     ).filter((role): role is string => Boolean(role));
@@ -431,24 +466,11 @@ export class AuthService {
       throw new UnauthorizedException('El usuario no tiene un rol habilitado.');
     }
 
-    const now = Math.floor(Date.now() / 1000);
-    const expiresAt = (now + SESSION_DURATION_SECONDS) * 1000;
-    const user = {
+    return {
       id: usuario.UsuarioId,
       name: `${usuario.Nombres} ${usuario.Apellidos}`.trim(),
       email: usuario.Correo,
       role,
-    };
-
-    await this.prisma.usuario.update({
-      where: { UsuarioId: usuario.UsuarioId },
-      data: { UltimoAccesoEn: new Date() },
-    });
-
-    return {
-      token: this.createAccessToken({ sub: usuario.UsuarioId, role, iat: now }),
-      user,
-      expiresAt,
     };
   }
 

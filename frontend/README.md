@@ -37,6 +37,6 @@ npm run lint
 
 ## Sesión y API
 
-El servicio HTTP usa `VITE_API_BASE_URL`. La sesión actual se guarda en `sessionStorage` y el cliente agrega el JWT como encabezado `Authorization: Bearer`. El uso de cookies seguras es un pendiente documentado en `docs/arquitectura-y-seguridad.md`.
+El servicio HTTP usa `VITE_API_BASE_URL` e incluye credenciales para que el navegador envíe la cookie de sesión `HttpOnly`. El JWT no se expone al JavaScript ni se guarda en `localStorage` o `sessionStorage`. Para solicitudes que cambian datos, el cliente envía el token CSRF asociado a la sesión.
 
 En Docker, el frontend se sirve por Nginx y su URL pública suele ser `http://localhost:8080`. La configuración actual de Compose todavía no pasa las variables de Google y reCAPTCHA al build del frontend.
