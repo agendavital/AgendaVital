@@ -1,6 +1,6 @@
 # Arquitectura y seguridad de AgendaVital
 
-**Estado del documento:** describe el código revisado el 13 de noviembre de 2026. Distingue los controles implementados de los pendientes; no representa una certificación de seguridad ni sustituye pruebas de despliegue.
+**Estado del documento:** describe el código revisado el 15 de noviembre de 2026. Distingue los controles implementados de los pendientes; no representa una certificación de seguridad ni sustituye pruebas de despliegue.
 
 ## 1. Propósito y alcance
 
@@ -18,7 +18,7 @@ El sistema corresponde al modelo **cliente-servidor organizado en tres capas ló
 | Aplicación y lógica de negocio (servidor) | API NestJS, organizada en controladores y servicios. | Recibir solicitudes `/api`, aplicar autenticación/autorización y ejecutar las operaciones de la aplicación. |
 | Datos | SQL Server, accedido desde NestJS mediante Prisma Client y el adaptador MSSQL. | Guardar y consultar la información persistente. |
 
-Prisma no constituye una cuarta capa ni es un servidor independiente: es la herramienta de acceso a datos que utiliza el backend para comunicarse con SQL Server. La separación de tres capas describe las responsabilidades y el recorrido de las solicitudes; no significa que ya exista una capa Repository independiente en el código. Actualmente, servicios como `AuthService` usan `PrismaService` directamente.
+NestJS accede a SQL Server mediante `PrismaService`, que utiliza Prisma Client y el adaptador MSSQL. En el código revisado, `AuthService` consume este servicio para las operaciones de autenticación.
 
 En Docker Compose, estas responsabilidades se despliegan principalmente como tres servicios: `frontend`, `backend` y `database`. El servicio puntual `database-init` prepara el esquema y los datos iniciales; no es una capa adicional de la aplicación.
 
@@ -104,6 +104,7 @@ Si el envío SMTP falla, la API registra información técnica limitada en la co
 - Hash de contraseñas con `bcryptjs`; el restablecimiento usa un costo de 12.
 - Límites de solicitudes distintos para login, Google, solicitud de recuperación y cambio de contraseña.
 - reCAPTCHA Enterprise validado desde el backend, incluyendo validez del token y hostname permitido.
+- Helmet 8.3 aplicado como middleware global en `main.ts` antes de configurar CORS y las rutas; agrega cabeceras como `X-Content-Type-Options`, `X-Frame-Options`, `Referrer-Policy` y `Strict-Transport-Security`.
 - Recuperación con token aleatorio, hash guardado en base de datos, caducidad y uso único.
 - CORS restringido a los orígenes indicados en `FRONTEND_URL`.
 - Credenciales leídas desde variables de entorno; los archivos de ejemplo deben contener únicamente valores ficticios.
@@ -113,7 +114,6 @@ Si el envío SMTP falla, la API registra información técnica limitada en la co
 Estos puntos no deben describirse como funciones ya completadas:
 
 - **Renovación de sesión:** el JWT dura una hora y no se encontró un flujo de refresh token.
-- **Cabeceras HTTP:** no se encontró configuración de Helmet en el arranque revisado.
 - **Validación de entrada:** no se encontró un `ValidationPipe` global; parte de la validación se hace manualmente en `AuthService`.
 - **Límites distribuidos:** el throttler usa el almacenamiento predeterminado del proceso, no un contador compartido entre réplicas.
 - **API de negocio:** verificar cada módulo antes de afirmar que sus operaciones persisten en SQL Server; las pantallas frontend pueden conservar datos simulados.
@@ -141,7 +141,7 @@ La configuración de Docker debe revisarse por separado: las variables del backe
 
 ## 8. Evidencia y verificación
 
-La documentación se contrastó con los archivos de referencia indicados en cada sección. La compilación del backend terminó correctamente. La compilación del frontend no pudo iniciarse porque el entorno rechazó la creación del proceso de esbuild (`spawn EPERM`). No se ejecutaron pruebas automatizadas ni pruebas de despliegue. La verificación manual en navegador confirmó que el login entrega las cookies de sesión y CSRF, que `GET /api/auth/session` responde `200` después de recargar y que cerrar sesión devuelve las rutas protegidas al login. La respuesta `403` de CSRF no se verificó de extremo a extremo porque el backend todavía no expone una ruta de escritura de negocio protegida por sesión.
+La documentación se contrastó con los archivos de referencia indicados en cada sección. La inspección manual de una respuesta del backend mostró las cabeceras de Helmet, incluidas `Cross-Origin-Resource-Policy: same-origin`, `Referrer-Policy: no-referrer`, `Strict-Transport-Security`, `X-Content-Type-Options: nosniff` y `X-Frame-Options: SAMEORIGIN`. El usuario confirmó que, después de activar Helmet, funcionan el inicio de sesión con correo y reCAPTCHA y el inicio con Google. La compilación del frontend no pudo iniciarse en una revisión previa porque el entorno rechazó la creación del proceso de esbuild (`spawn EPERM`). No se ejecutaron pruebas automatizadas ni pruebas de despliegue. La respuesta `403` de CSRF no se verificó de extremo a extremo porque el backend todavía no expone una ruta de escritura de negocio protegida por sesión.
 
 Para una entrega verificable, adjuntar evidencia separada de:
 
