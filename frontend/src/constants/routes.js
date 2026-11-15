@@ -11,4 +11,6 @@ export const ROUTES = {
   notifications: "/notifications",
   audit: "/audit",
   resetPassword: "/reset-password",
+  privacy: "/privacy",
+  terms: "/terms",
 };

@@ -415,8 +415,8 @@ export default function LandingPage() {
         <div className="footer-bottom">
           <p>© 2026 Agenda Vital - Todos los derechos reservados.</p>
           <div className="footer-legal">
-            <a href="#contacto">Privacidad</a>
-            <a href="#contacto">Terminos</a>
+            <Link to={ROUTES.privacy}>Privacidad</Link>
+            <Link to={ROUTES.terms}>Términos</Link>
             <a href="#contacto">Contacto</a>
           </div>
         </div>

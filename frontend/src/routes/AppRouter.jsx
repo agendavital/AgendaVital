@@ -17,11 +17,14 @@ import { MODULE_ROLES } from "../constants/navigation";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleRoute from "./RoleRoute";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
+import LegalPage from "../pages/LegalPage";
 
 export default function AppRouter() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
+      <Route path={ROUTES.privacy} element={<LegalPage />} />
+      <Route path={ROUTES.terms} element={<LegalPage />} />
       <Route element={<PublicLayout />}>
         <Route path={ROUTES.login} element={<LoginPage />} />
         <Route path={ROUTES.forgotPassword} element={<ForgotPasswordPage />} />
