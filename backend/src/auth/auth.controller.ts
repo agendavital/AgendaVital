@@ -12,28 +12,13 @@ import { ThrottlerGuard, Throttle } from '@nestjs/throttler';
 import type { Request, Response } from 'express';
 import { clearSessionCookies, setSessionCookies } from './session-cookies';
 import { JwtAuthGuard } from './JwtAuthGuard';
+import { LoginDto } from './dto/login.dto';
+import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
+import { GoogleLoginDto } from './dto/google-login.dto';
 
 type AuthenticatedRequest = Request & {
   user: { sub: number };
-};
-
-type LoginBody = {
-  email?: unknown;
-  password?: unknown;
-  captchaToken?: unknown;
-};
-
-type ForgotPasswordBody = {
-  email?: unknown;
-};
-
-type ResetPasswordBody = {
-  token?: unknown;
-  password?: unknown;
-};
-
-type GoogleLoginBody = {
-  credential?: unknown;
 };
 
 @Controller('auth')
@@ -43,7 +28,7 @@ export class AuthController {
   @Post('login')
   @UseGuards(ThrottlerGuard)
   async login(
-    @Body() body: LoginBody,
+    @Body() body: LoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     return this.issueSession(response, await this.authService.login(body));
@@ -52,21 +37,21 @@ export class AuthController {
   @Post('forgot-password')
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 3, ttl: 15 * 60_000 } })
-  forgotPassword(@Body() body: ForgotPasswordBody) {
+  forgotPassword(@Body() body: ForgotPasswordDto) {
     return this.authService.requestPasswordRecovery(body);
   }
 
   @Post('reset-password')
   @UseGuards(ThrottlerGuard)
   @Throttle({ default: { limit: 5, ttl: 15 * 60_000 } })
-  resetPassword(@Body() body: ResetPasswordBody) {
+  resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.resetPassword(body);
   }
 
   @Post('google')
   @UseGuards(ThrottlerGuard)
   async loginWithGoogle(
-    @Body() body: GoogleLoginBody,
+    @Body() body: GoogleLoginDto,
     @Res({ passthrough: true }) response: Response,
   ) {
     return this.issueSession(
