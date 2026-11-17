@@ -108,13 +108,13 @@ Si el envío SMTP falla, la API registra información técnica limitada en la co
 - Recuperación con token aleatorio, hash guardado en base de datos, caducidad y uso único.
 - CORS restringido a los orígenes indicados en `FRONTEND_URL`.
 - Credenciales leídas desde variables de entorno; los archivos de ejemplo deben contener únicamente valores ficticios.
+- Validación global de solicitudes con `ValidationPipe` (`transform`, `whitelist` y `forbidNonWhitelisted`) y DTOs para login, recuperación, restablecimiento de contraseña y acceso con Google.
 
 ## 6. Pendientes y límites conocidos
 
 Estos puntos no deben describirse como funciones ya completadas:
 
 - **Renovación de sesión:** el JWT dura una hora y no se encontró un flujo de refresh token.
-- **Validación de entrada:** no se encontró un `ValidationPipe` global; parte de la validación se hace manualmente en `AuthService`.
 - **Límites distribuidos:** el throttler usa el almacenamiento predeterminado del proceso, no un contador compartido entre réplicas.
 - **API de negocio:** verificar cada módulo antes de afirmar que sus operaciones persisten en SQL Server; las pantallas frontend pueden conservar datos simulados.
 - **Configuración Docker de servicios externos:** `compose.yaml` no pasa actualmente al backend las variables de reCAPTCHA ni las de SMTP. El build del frontend tampoco recibe `VITE_GOOGLE_CLIENT_ID` ni `VITE_RECAPTCHA_SITE_KEY`. Por tanto, no debe asumirse que esos flujos están configurados en Docker aunque funcionen localmente.
