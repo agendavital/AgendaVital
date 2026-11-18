@@ -1,0 +1,116 @@
+.faq-section {
+  background: var(--blanco);
+}
+
+.faq-lista {
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq-item {
+  overflow: hidden;
+  border: 1.5px solid var(--gris-300);
+  border-radius: var(--radius);
+  transition: border-color 0.2s;
+}
+
+.faq-item.activo {
+  border-color: var(--verde);
+}
+
+.faq-pregunta {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.1rem 1.3rem;
+  border: none;
+  background: var(--blanco);
+  color: var(--azul-oscuro);
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: left;
+  transition: background 0.2s, color 0.2s;
+}
+
+.faq-pregunta:hover {
+  background: var(--verde-suave);
+  color: var(--verde);
+}
+
+.faq-icono {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--verde-suave);
+  color: var(--verde);
+  transition: background 0.2s, color 0.2s;
+}
+
+.faq-icono::before,
+.faq-icono::after {
+  content: "";
+  position: absolute;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 0.2s ease;
+}
+
+.faq-icono::before {
+  width: 12px;
+  height: 2px;
+}
+
+.faq-icono::after {
+  width: 2px;
+  height: 12px;
+}
+
+.faq-item.activo .faq-icono {
+  background: var(--verde);
+  color: var(--blanco);
+}
+
+.faq-item.activo .faq-icono::after {
+  transform: scaleY(0);
+}
+
+.faq-respuesta {
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 1.3rem;
+  transition: max-height 0.35s ease, padding 0.25s;
+}
+
+.faq-item.activo .faq-respuesta {
+  max-height: 300px;
+  padding: 0 1.3rem 1.1rem;
+}
+
+.faq-respuesta p {
+  margin: 0;
+  color: var(--gris-600);
+  font-size: 0.9rem;
+  line-height: 1.75;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .faq-item,
+  .faq-pregunta,
+  .faq-icono,
+  .faq-icono::before,
+  .faq-icono::after,
+  .faq-respuesta {
+    transition: none;
+  }
+}

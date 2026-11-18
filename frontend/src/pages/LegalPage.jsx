@@ -1,5 +1,6 @@
 import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../constants/routes";
+import "../styles/legal.css";
 
 const pages = {
   [ROUTES.privacy]: {
