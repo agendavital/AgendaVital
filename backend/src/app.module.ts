@@ -3,8 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { PrismaModule } from './database/prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
-import { JwtAuthGuard } from './auth/JwtAuthGuard';
-import { RolesGuard } from './auth/roles.guard';
+import { CandidatesModule } from './modules/candidates/candidates.module';
 
 @Module({
   imports: [
@@ -13,8 +12,8 @@ import { RolesGuard } from './auth/roles.guard';
     }),
     PrismaModule,
     AuthModule,
+    CandidatesModule,
   ],
   controllers: [AppController],
-  providers: [JwtAuthGuard, RolesGuard],
 })
 export class AppModule {}

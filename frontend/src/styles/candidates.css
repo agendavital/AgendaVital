@@ -1,0 +1,73 @@
+.candidate-form {
+  width: min(100%, 1040px);
+  gap: 0;
+  padding: 28px;
+  border: 1px solid var(--gris-300);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: var(--sombra);
+}
+
+.candidate-form__heading {
+  margin-bottom: 24px;
+}
+
+.candidate-form__heading h2 {
+  margin: 0 0 6px;
+  color: var(--azul-oscuro);
+  font-size: 1.35rem;
+}
+
+.candidate-form__heading p {
+  margin: 0;
+  color: var(--gris-600);
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.candidate-form__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 24px;
+}
+
+.candidate-form__field--wide {
+  grid-column: 1 / -1;
+}
+
+.candidate-form__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.candidate-form__actions .button {
+  width: auto;
+  min-width: 180px;
+  min-height: 44px;
+  padding: 12px 22px;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+
+.candidate-form__heading .eyebrow {
+  margin-bottom: 8px;
+}
+
+@media (max-width: 720px) {
+  .candidate-form {
+    padding: 22px;
+  }
+
+  .candidate-form__fields {
+    grid-template-columns: 1fr;
+  }
+
+  .candidate-form__field--wide {
+    grid-column: auto;
+  }
+
+  .candidate-form__actions .button {
+    width: 100%;
+   }
+}
