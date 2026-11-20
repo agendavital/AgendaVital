@@ -1,0 +1,134 @@
+.exam-requests-form {
+  width: min(100%, 900px);
+  gap: 22px;
+  padding: 28px;
+  border: 1px solid var(--gris-300);
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: var(--sombra);
+}
+
+.exam-requests-form__heading h2,
+.exam-requests-list__heading h2 {
+  margin: 0 0 8px;
+  color: var(--azul-oscuro);
+  font-size: 1.3rem;
+}
+
+.exam-requests-form__heading p:last-child,
+.exam-requests-list__heading p,
+.exam-requests-types > p {
+  margin: 0;
+  color: var(--gris-600);
+  line-height: 1.55;
+}
+
+.exam-requests-types {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.exam-requests-types legend {
+  margin-bottom: 4px;
+  color: var(--azul-oscuro);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.exam-requests-types__options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.exam-requests-types__option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--gris-300);
+  border-radius: 10px;
+  color: var(--azul-oscuro);
+  cursor: pointer;
+}
+
+.exam-requests-types__option input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--verde-oscuro);
+}
+
+.exam-requests-types__option:has(input:checked) {
+  border-color: var(--verde-oscuro);
+  background: var(--verde-claro);
+}
+
+.exam-requests-form__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.exam-requests-form__actions .button {
+  min-width: 190px;
+}
+
+.exam-requests-page__description {
+  max-width: 720px;
+  margin: 8px 0 0;
+  color: var(--gris-600);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.exam-requests-list {
+  display: grid;
+  gap: 16px;
+}
+
+.exam-requests-list__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.exam-requests-list__heading h2 {
+  margin-bottom: 0;
+}
+
+.exam-requests-list__count {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--verde-claro);
+  color: var(--verde-oscuro);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.exam-requests-list__message {
+  margin: 0;
+  color: var(--gris-600);
+}
+
+@media (max-width: 720px) {
+  .exam-requests-form {
+    padding: 22px;
+  }
+
+  .exam-requests-types__options {
+    grid-template-columns: 1fr;
+  }
+
+  .exam-requests-form__actions .button {
+    width: 100%;
+  }
+
+  .exam-requests-list__heading {
+    align-items: flex-start;
+  }
+}
