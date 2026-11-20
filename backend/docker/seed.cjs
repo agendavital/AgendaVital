@@ -9,6 +9,23 @@ const roles = [
   ['CANDIDATO', 'Candidato', 'Consulta del proceso ocupacional'],
 ];
 
+const processStates = [
+  ['PENDIENTE', 'Pendiente'],
+  ['EN_PROCESO', 'En proceso'],
+  ['FINALIZADO', 'Finalizado'],
+  ['CANCELADO', 'Cancelado'],
+];
+
+const examTypes = [
+  ['INGRESO', 'Ingreso'],
+  ['PERIODICO', 'Periódico'],
+  ['EGRESO', 'Egreso'],
+];
+
+const examRequestStates = [['SOLICITADA', 'Solicitada']];
+
+const appointmentStates = [['PROGRAMADA', 'Programada']];
+
 async function seed() {
   const adminEmail = process.env.ADMIN_EMAIL;
   const adminPassword = process.env.ADMIN_PASSWORD;
@@ -45,6 +62,52 @@ async function seed() {
           END
         `);
     }
+
+    for (const [code, name] of processStates) {
+      await new sql.Request(transaction)
+        .input('code', sql.VarChar(40), code)
+        .input('name', sql.NVarChar(80), name).query(`
+          IF NOT EXISTS (SELECT 1 FROM dbo.EstadoProceso WHERE Codigo = @code)
+          BEGIN
+            INSERT INTO dbo.EstadoProceso (Codigo, Nombre)
+            VALUES (@code, @name);
+          END
+        `);
+    }
+
+    for (const [code, name] of examRequestStates) {
+      await new sql.Request(transaction)
+        .input('code', sql.VarChar(40), code)
+        .input('name', sql.NVarChar(80), name).query(`
+          IF NOT EXISTS (SELECT 1 FROM dbo.EstadoSolicitud WHERE Codigo = @code)
+          BEGIN
+            INSERT INTO dbo.EstadoSolicitud (Codigo, Nombre)
+            VALUES (@code, @name);
+          END
+        `);
+    }
+
+    for (const [code, name] of examTypes) {
+      await new sql.Request(transaction)
+        .input('code', sql.VarChar(30), code)
+        .input('name', sql.NVarChar(80), name).query(`
+          IF NOT EXISTS (SELECT 1 FROM dbo.TipoExamen WHERE Codigo = @code)
+          BEGIN
+            INSERT INTO dbo.TipoExamen (Codigo, Nombre)
+            VALUES (@code, @name);
+          END
+        `);
+    }
+
+    await new sql.Request(transaction)
+      .input('nit', sql.VarChar(20), 'TEST-AV-001')
+      .input('name', sql.NVarChar(150), 'Empresa de Prueba AgendaVital').query(`
+        IF NOT EXISTS (SELECT 1 FROM dbo.Empresa WHERE Nit = @nit)
+        BEGIN
+          INSERT INTO dbo.Empresa (Nit, RazonSocial)
+          VALUES (@nit, @name);
+        END
+      `);
 
     const passwordHash = await bcrypt.hash(adminPassword, 10);
     const userRequest = new sql.Request(transaction)
@@ -89,8 +152,20 @@ async function seed() {
         END
       `);
 
+    for (const [code, name] of appointmentStates) {
+      await new sql.Request(transaction)
+        .input('code', sql.VarChar(40), code)
+        .input('name', sql.NVarChar(80), name).query(`
+          IF NOT EXISTS (SELECT 1 FROM dbo.EstadoCita WHERE Codigo = @code)
+          BEGIN
+            INSERT INTO dbo.EstadoCita (Codigo, Nombre)
+            VALUES (@code, @name);
+          END
+        `);
+    }
+
     await transaction.commit();
-    console.log('Roles y administrador inicial preparados.');
+    console.log('Roles, estados y catálogos iniciales del sistema preparados.');
   } catch (error) {
     await transaction.rollback();
     throw error;
