@@ -17,11 +17,25 @@ export const MODULES = [
     roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC],
   },
   {
+    key: "processes",
+    to: ROUTES.processes,
+    label: "Procesos",
+    description: "Inicia y consulta procesos ocupacionales.",
+    roles: [ROLES.ADMIN, ROLES.HR],
+  },
+  {
+    key: "examRequests",
+    to: ROUTES.examRequests,
+    label: "Exámenes",
+    description: "Solicita exámenes para procesos ocupacionales abiertos.",
+    roles: [ROLES.ADMIN, ROLES.HR],
+  },
+  {
     key: "appointments",
     to: ROUTES.appointments,
     label: "Citas",
-    description: "Consulta la agenda de citas ocupacionales.",
-    roles: [ROLES.ADMIN, ROLES.HR, ROLES.CLINIC, ROLES.DOCTOR],
+    description: "Programa solicitudes en horarios disponibles.",
+    roles: [ROLES.ADMIN, ROLES.HR],
   },
   {
     key: "audit",

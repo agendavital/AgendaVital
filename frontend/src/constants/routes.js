@@ -4,6 +4,8 @@ export const ROUTES = {
   dashboard: "/dashboard",
   users: "/users",
   candidates: "/candidates",
+  processes: "/processes",
+  examRequests: "/exam-requests",
   appointments: "/appointments",
   documents: "/documents",
   medicalResults: "/medical-results",

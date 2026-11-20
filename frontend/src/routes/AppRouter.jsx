@@ -13,6 +13,8 @@ import LoginPage from "../pages/LoginPage";
 import MedicalResultsPage from "../pages/MedicalResultsPage";
 import NotificationsPage from "../pages/NotificationsPage";
 import ReportsPage from "../pages/ReportsPage";
+import ProcessesPage from "../pages/ProcessesPage";
+import ExamRequestsPage from "../pages/ExamRequestsPage";
 import { MODULE_ROLES } from "../constants/navigation";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleRoute from "./RoleRoute";
@@ -50,6 +52,22 @@ export default function AppRouter() {
           element={
             <RoleRoute allowedRoles={MODULE_ROLES.candidates}>
               <CandidatesPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.processes}
+          element={
+            <RoleRoute allowedRoles={MODULE_ROLES.processes}>
+              <ProcessesPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.examRequests}
+          element={
+            <RoleRoute allowedRoles={MODULE_ROLES.examRequests}>
+              <ExamRequestsPage />
             </RoleRoute>
           }
         />
