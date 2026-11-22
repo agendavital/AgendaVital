@@ -9,6 +9,7 @@ import { compare, hash } from 'bcryptjs';
 import { OAuth2Client } from 'google-auth-library';
 import { PrismaService } from '../database/prisma/prisma.service';
 import * as nodemailer from 'nodemailer';
+import { buildPasswordRecoveryEmail } from './templates/password-recovery.template';
 
 const SESSION_DURATION_SECONDS = 60 * 60;
 
@@ -216,8 +217,16 @@ export class AuthService {
       });
     });
 
-    const enlace = new URL('/reset-password', frontendUrl);
+    const emailBaseUrl = frontendUrl.split(',')[0].trim();
+    const enlace = new URL('/reset-password', emailBaseUrl);
     enlace.searchParams.set('token', token);
+    const recoveryUrl = enlace.toString();
+    const logoUrl = new URL('/icono_AgendaVital.svg', emailBaseUrl).toString();
+    const emailContent = buildPasswordRecoveryEmail({
+      name: usuario.Nombres,
+      recoveryUrl,
+      logoUrl,
+    });
 
     const transporter = nodemailer.createTransport({
       host,
@@ -230,16 +239,8 @@ export class AuthService {
       await transporter.sendMail({
         from,
         to: usuario.Correo,
-        subject: 'Recuperación de contraseña de AgendaVital',
-        text: [
-          `Hola ${usuario.Nombres},`,
-          '',
-          'Recibimos una solicitud para cambiar tu contraseña.',
-          `Abre este enlace dentro de los próximos 15 minutos:
-          ${enlace.toString()}`,
-          '',
-          'Si no solicitastes este cambio, puedes ignorar este correo.',
-        ].join('\n'),
+        subject: 'AgendaVital | Recupera el acceso a tu cuenta',
+        ...emailContent,
       });
     } catch (error) {
       await this.prisma.tokenRecuperacion.updateMany({
