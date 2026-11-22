@@ -14,10 +14,7 @@ export class ProcessesService {
 
   async findAll(): Promise<ProcessListItemDto[]> {
     const processes = await this.prisma.procesoOcupacional.findMany({
-      orderBy: [
-        { FechaInicio: 'desc' },
-        { ProcesoOcupacionalId: 'desc' },
-      ],
+      orderBy: [{ FechaInicio: 'desc' }, { ProcesoOcupacionalId: 'desc' }],
       select: {
         ProcesoOcupacionalId: true,
         FechaInicio: true,

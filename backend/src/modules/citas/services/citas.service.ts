@@ -161,6 +161,17 @@ export class CitasService {
               SolicitudExamenId: true,
               EstadoSolicitud: { select: { Codigo: true } },
               Cita: { select: { CitaId: true } },
+              TipoExamen: { select: { Nombre: true } },
+              ProcesoOcupacional: {
+                select: {
+                  ProcesoOcupacionalId: true,
+                  Candidato: {
+                    select: {
+                      UsuarioId: true,
+                    },
+                  },
+                },
+              },
             },
           }),
           transaction.disponibilidad.findUnique({
@@ -170,7 +181,9 @@ export class CitasService {
               ClinicaId: true,
               InicioEn: true,
               Estado: true,
-              Clinica: { select: { Activa: true } },
+              Clinica: {
+                select: { Activa: true, Nombre: true, Ciudad: true },
+              },
               Cita: { select: { CitaId: true } },
             },
           }),
@@ -223,6 +236,31 @@ export class CitasService {
           },
           select: { CitaId: true },
         });
+
+        const appointmentDate = new Intl.DateTimeFormat('es-CO', {
+          dateStyle: 'full',
+          timeStyle: 'short',
+          timeZone: 'America/Bogota',
+        }).format(slot.InicioEn);
+        const clinicLocation = slot.Clinica.Ciudad
+          ? `${slot.Clinica.Nombre}, ${slot.Clinica.Ciudad}`
+          : slot.Clinica.Nombre;
+
+        await transaction.notificacion.create({
+          data: {
+            UsuarioDestinatarioId:
+              request.ProcesoOcupacional.Candidato.UsuarioId,
+            ProcesoOcupacionalId:
+              request.ProcesoOcupacional.ProcesoOcupacionalId,
+            CitaId: appointment.CitaId,
+            TipoEvento: 'CITA_PROGRAMADA',
+            Canal: 'INTERNO',
+            Asunto: 'Tu cita de examen fue programada',
+            Mensaje: `Tu examen ${request.TipoExamen.Nombre} quedó programado para el ${appointmentDate} en ${clinicLocation}.`,
+            Estado: 'ENVIADA',
+          },
+        });
+
         return appointment.CitaId;
       });
     } catch (error) {

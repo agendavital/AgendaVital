@@ -7,6 +7,12 @@ import { CandidatesModule } from './modules/candidates/candidates.module';
 import { ProcessesModule } from './modules/processes/processes.module';
 import { ExamRequestsModule } from './modules/exam-requests/exam-requests.module';
 import { CitasModule } from './modules/citas/citas.module';
+import { ClinicasModule } from './modules/clinicas/clinicas.module';
+import { HorariosModule } from './modules/horarios/horarios.module';
+import { MedicosModule } from './modules/medicos/medicos.module';
+import { EvaluacionesModule } from './modules/evaluaciones/evaluaciones.module';
+import { AuditoriaModule } from './modules/auditoria/auditoria.module';
+import { NotificacionesModule } from './modules/notificaciones/notificaciones.module';
 
 @Module({
   imports: [
@@ -19,6 +25,12 @@ import { CitasModule } from './modules/citas/citas.module';
     ProcessesModule,
     ExamRequestsModule,
     CitasModule,
+    ClinicasModule,
+    HorariosModule,
+    MedicosModule,
+    EvaluacionesModule,
+    AuditoriaModule,
+    NotificacionesModule,
   ],
   controllers: [AppController],
 })

@@ -24,7 +24,16 @@ const examTypes = [
 
 const examRequestStates = [['SOLICITADA', 'Solicitada']];
 
-const appointmentStates = [['PROGRAMADA', 'Programada']];
+const appointmentStates = [
+  ['PROGRAMADA', 'Programada'],
+  ['REALIZADA', 'Realizada'],
+];
+
+const occupationalConcepts = [
+  ['APTO', 'Apto'],
+  ['APTO_CON_RESTRICCIONES', 'Apto con restricciones'],
+  ['NO_APTO', 'No apto'],
+];
 
 async function seed() {
   const adminEmail = process.env.ADMIN_EMAIL;
@@ -159,6 +168,20 @@ async function seed() {
           IF NOT EXISTS (SELECT 1 FROM dbo.EstadoCita WHERE Codigo = @code)
           BEGIN
             INSERT INTO dbo.EstadoCita (Codigo, Nombre)
+            VALUES (@code, @name);
+          END
+        `);
+    }
+
+    for (const [code, name] of occupationalConcepts) {
+      await new sql.Request(transaction)
+        .input('code', sql.VarChar(30), code)
+        .input('name', sql.NVarChar(80), name).query(`
+          IF NOT EXISTS (
+            SELECT 1 FROM dbo.ConceptoOcupacional WHERE Codigo = @code
+          )
+          BEGIN
+            INSERT INTO dbo.ConceptoOcupacional (Codigo, Nombre)
             VALUES (@code, @name);
           END
         `);
