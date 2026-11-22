@@ -7,7 +7,12 @@ const toneByStatus = {
   Restringido: "danger",
   Verificado: "success",
   Pendiente: "warning",
-  "En proceso": "info"
+  "En proceso": "info",
+  Activa: "success",
+  Inactiva: "neutral",
+  Disponible: "success",
+  Reservada: "info",
+  CANCELADA: "neutral"
 };
 
 export default function StatusBadge({ value }) {

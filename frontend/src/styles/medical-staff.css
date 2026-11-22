@@ -1,0 +1,96 @@
+.medical-staff__description {
+  max-width: 780px;
+  margin: 8px 0 0;
+  color: var(--gris-600);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.medical-staff__section,
+.medical-staff__list {
+  display: grid;
+  gap: 20px;
+  padding: 24px;
+  border: 1px solid var(--gris-300);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--sombra);
+}
+
+.medical-staff__heading h2,
+.medical-staff__list-heading h2 {
+  margin: 0 0 8px;
+  color: var(--azul-oscuro);
+  font-size: 1.35rem;
+}
+
+.medical-staff__heading p:last-child,
+.medical-staff__list-heading p {
+  margin: 0;
+  color: var(--gris-600);
+  line-height: 1.55;
+}
+
+.medical-staff__form {
+  gap: 18px;
+}
+
+.medical-staff__field-hint {
+  display: block;
+  margin-top: 6px;
+  color: var(--gris-600);
+  font-size: 0.84rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.medical-staff__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.medical-staff__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.medical-staff__actions .button {
+  min-width: 210px;
+}
+
+.medical-staff__list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.medical-staff__count {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--verde-claro);
+  color: var(--verde-oscuro);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .medical-staff__section,
+  .medical-staff__list {
+    padding: 20px;
+  }
+
+  .medical-staff__fields {
+    grid-template-columns: 1fr;
+  }
+
+  .medical-staff__list-heading {
+    align-items: flex-start;
+  }
+
+  .medical-staff__actions .button {
+    width: 100%;
+  }
+}

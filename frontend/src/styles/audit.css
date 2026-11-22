@@ -1,0 +1,16 @@
+.audit-page__description {
+  max-width: 760px;
+  margin: 12px 0 0;
+  color: var(--color-text-muted, #60758a);
+}
+
+.audit-page__error {
+  padding: 16px 20px;
+  border-radius: 12px;
+  background: #fff1ee;
+  color: #a5351d;
+}
+
+.audit-page .table-wrap {
+  overflow-x: auto;
+}

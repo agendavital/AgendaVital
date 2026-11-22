@@ -38,6 +38,13 @@ export const MODULES = [
     roles: [ROLES.ADMIN, ROLES.HR],
   },
   {
+    key: "clinicManagement",
+    to: ROUTES.clinicManagement,
+    label: "Clínicas y horarios",
+    description: "Administra clínicas y publica disponibilidad para citas.",
+    roles: [ROLES.ADMIN],
+  },
+  {
     key: "audit",
     to: ROUTES.audit,
     label: "Auditoría",

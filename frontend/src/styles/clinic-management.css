@@ -1,0 +1,116 @@
+.clinic-management__description {
+  max-width: 760px;
+  margin: 8px 0 0;
+  color: var(--gris-600);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.clinic-management__staff-entry {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  border: 1px solid var(--gris-300);
+  border-radius: 14px;
+  background: #fff;
+}
+
+.clinic-management__staff-entry h2 {
+  margin: 0 0 6px;
+  color: var(--azul-oscuro);
+  font-size: 1.1rem;
+}
+
+.clinic-management__staff-entry p {
+  margin: 0;
+  color: var(--gris-600);
+  line-height: 1.5;
+}
+
+.clinic-management__section {
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+  border: 1px solid var(--gris-300);
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: var(--sombra);
+}
+
+.clinic-management__section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.clinic-management__section-heading h2 {
+  margin: 0 0 6px;
+  color: var(--azul-oscuro);
+  font-size: 1.3rem;
+}
+
+.clinic-management__section-heading p:last-child {
+  margin: 0;
+  color: var(--gris-600);
+  line-height: 1.55;
+}
+
+.clinic-management__form {
+  gap: 18px;
+}
+
+.clinic-management__fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 20px;
+}
+
+.clinic-management__fields--schedule {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.clinic-management__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.clinic-management__actions .button {
+  min-width: 190px;
+}
+
+.clinic-management__count {
+  flex: 0 0 auto;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--verde-claro);
+  color: var(--verde-oscuro);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .clinic-management__section {
+    padding: 20px;
+  }
+
+  .clinic-management__fields,
+  .clinic-management__fields--schedule {
+    grid-template-columns: 1fr;
+  }
+
+  .clinic-management__section-heading {
+    align-items: flex-start;
+  }
+
+  .clinic-management__staff-entry {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .clinic-management__actions .button {
+    width: 100%;
+  }
+}

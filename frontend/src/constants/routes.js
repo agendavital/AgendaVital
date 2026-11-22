@@ -7,6 +7,8 @@ export const ROUTES = {
   processes: "/processes",
   examRequests: "/exam-requests",
   appointments: "/appointments",
+  clinicManagement: "/clinic-management",
+  medicalStaff: "/medical-staff",
   documents: "/documents",
   medicalResults: "/medical-results",
   reports: "/reports",

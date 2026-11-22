@@ -5,17 +5,20 @@ import PublicLayout from "../layouts/PublicLayout";
 import AppointmentsPage from "../pages/AppointmentsPage";
 import AuditPage from "../pages/AuditPage";
 import CandidatesPage from "../pages/CandidatesPage";
+import ClinicManagementPage from "../pages/ClinicManagementPage";
 import DashboardPage from "../pages/DashboardPage";
 import DocumentsPage from "../pages/DocumentsPage";
 import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 import LandingPage from "../pages/LandingPage";
 import LoginPage from "../pages/LoginPage";
 import MedicalResultsPage from "../pages/MedicalResultsPage";
+import MedicalStaffPage from "../pages/MedicalStaffPage";
 import NotificationsPage from "../pages/NotificationsPage";
 import ReportsPage from "../pages/ReportsPage";
 import ProcessesPage from "../pages/ProcessesPage";
 import ExamRequestsPage from "../pages/ExamRequestsPage";
 import { MODULE_ROLES } from "../constants/navigation";
+import { ROLES } from "../constants/roles";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleRoute from "./RoleRoute";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
@@ -76,6 +79,22 @@ export default function AppRouter() {
           element={
             <RoleRoute allowedRoles={MODULE_ROLES.appointments}>
               <AppointmentsPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.clinicManagement}
+          element={
+            <RoleRoute allowedRoles={MODULE_ROLES.clinicManagement}>
+              <ClinicManagementPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.medicalStaff}
+          element={
+            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+              <MedicalStaffPage />
             </RoleRoute>
           }
         />
