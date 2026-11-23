@@ -1,5 +1,8 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
   IsInt,
   IsNotEmpty,
   IsOptional,
@@ -8,7 +11,25 @@ import {
   MaxLength,
   Min,
   MinLength,
+  ValidateNested,
 } from 'class-validator';
+
+class ReportedMedicationDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(160)
+  nombre!: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  dosis?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(120)
+  frecuencia?: string;
+}
 
 export class CreateEvaluacionDto {
   @IsString()
@@ -38,4 +59,16 @@ export class CreateEvaluacionDto {
   @IsString()
   @MaxLength(5000)
   restriccion?: string;
+
+  @IsBoolean()
+  tomaMedicamentos!: boolean;
+
+  @IsBoolean()
+  medicamentosRevisados!: boolean;
+
+  @IsArray()
+  @ArrayMaxSize(20)
+  @ValidateNested({ each: true })
+  @Type(() => ReportedMedicationDto)
+  medicamentos!: ReportedMedicationDto[];
 }

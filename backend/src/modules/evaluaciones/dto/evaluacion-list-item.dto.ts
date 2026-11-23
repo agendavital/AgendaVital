@@ -11,4 +11,11 @@ export class EvaluacionListItemDto {
   resultadoResumen!: string;
   evaluadaEn!: string;
   restriccion!: string | null;
+  tomaMedicamentos!: boolean | null;
+  medicamentosRevisados!: boolean | null;
+  medicamentos!: Array<{
+    nombre: string;
+    dosis: string | null;
+    frecuencia: string | null;
+  }>;
 }

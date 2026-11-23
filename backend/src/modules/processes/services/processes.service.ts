@@ -7,10 +7,136 @@ import {
 import { PrismaService } from '../../../database/prisma/prisma.service';
 import { CreateProcessDto } from '../dto/create-process.dto';
 import { ProcessListItemDto } from '../dto/process-list-item.dto';
+import { UpsertPerfilCargoDto } from '../dto/upsert-perfil-cargo.dto';
+import {
+  WorkplaceProfileResponseDto,
+  WorkplaceProfileSaveResultDto,
+} from '../dto/workplace-profile-response.dto';
 
 @Injectable()
 export class ProcessesService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async getWorkplaceProfile(
+    processIdInput: string,
+    userId: number,
+    role: string,
+  ): Promise<WorkplaceProfileResponseDto | null> {
+    const processId = this.parseProcessId(processIdInput);
+    await this.assertProcessAccess(processId, userId, role);
+    const profile = await this.prisma.perfilCargo.findUnique({
+      where: { ProcesoOcupacionalId: processId },
+      select: {
+        NombreCargo: true,
+        FuncionesResponsabilidades: true,
+        HabilidadesCompetencias: true,
+        RequisitosFisicosMentales: true,
+        RiesgosLaborales: true,
+        MedidasPreventivas: true,
+        IndicadoresEpidemiologicos: true,
+        MatrizPeligrosRiesgos: true,
+        EstudiosTecnicos: true,
+        IndicadoresBiologicos: true,
+        RegistradoEn: true,
+      },
+    });
+
+    if (!profile) return null;
+    return {
+      nombreCargo: profile.NombreCargo,
+      funcionesResponsabilidades: profile.FuncionesResponsabilidades,
+      habilidadesCompetencias: profile.HabilidadesCompetencias,
+      requisitosFisicosMentales: profile.RequisitosFisicosMentales,
+      riesgosLaborales: profile.RiesgosLaborales,
+      medidasPreventivas: profile.MedidasPreventivas,
+      indicadoresEpidemiologicos: profile.IndicadoresEpidemiologicos,
+      matrizPeligrosRiesgos: profile.MatrizPeligrosRiesgos,
+      estudiosTecnicos: profile.EstudiosTecnicos,
+      indicadoresBiologicos: profile.IndicadoresBiologicos,
+      registradoEn: profile.RegistradoEn.toISOString(),
+    };
+  }
+
+  async upsertWorkplaceProfile(
+    processIdInput: string,
+    input: UpsertPerfilCargoDto,
+    userId: number,
+    role: string,
+  ): Promise<WorkplaceProfileSaveResultDto> {
+    const processId = this.parseProcessId(processIdInput);
+    await this.assertProcessAccess(processId, userId, role);
+    const profileData = {
+      NombreCargo: input.nombreCargo.trim(),
+      FuncionesResponsabilidades: input.funcionesResponsabilidades.trim(),
+      HabilidadesCompetencias: input.habilidadesCompetencias.trim(),
+      RequisitosFisicosMentales: input.requisitosFisicosMentales.trim(),
+      RiesgosLaborales: input.riesgosLaborales.trim(),
+      MedidasPreventivas: input.medidasPreventivas.trim(),
+      IndicadoresEpidemiologicos: input.indicadoresEpidemiologicos.trim(),
+      MatrizPeligrosRiesgos: input.matrizPeligrosRiesgos.trim(),
+      EstudiosTecnicos: input.estudiosTecnicos.trim(),
+      IndicadoresBiologicos: input.indicadoresBiologicos.trim(),
+    };
+    if (Object.values(profileData).some((value) => value.length < 2)) {
+      throw new BadRequestException(
+        'Completa cada elemento del perfil o escribe “No aplica” cuando corresponda.',
+      );
+    }
+    const profile = await this.prisma.perfilCargo.upsert({
+      where: { ProcesoOcupacionalId: processId },
+      create: {
+        ProcesoOcupacionalId: processId,
+        ...profileData,
+        RegistradoPorUsuarioId: userId,
+      },
+      update: {
+        ...profileData,
+        RegistradoPorUsuarioId: userId,
+        RegistradoEn: new Date(),
+        RecibidoPorProfesionalId: null,
+        RecibidoEn: null,
+      },
+      select: { RegistradoEn: true },
+    });
+
+    return {
+      message: 'La información del cargo quedó registrada.',
+      registradoEn: profile.RegistradoEn.toISOString(),
+    };
+  }
+
+  private parseProcessId(value: string): bigint {
+    if (!/^[1-9]\d*$/.test(value)) {
+      throw new BadRequestException(
+        'El identificador del proceso no es válido.',
+      );
+    }
+    return BigInt(value);
+  }
+
+  private async assertProcessAccess(
+    processId: bigint,
+    userId: number,
+    role: string,
+  ) {
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: { EmpresaId: true },
+    });
+    const process = await this.prisma.procesoOcupacional.findUnique({
+      where: { ProcesoOcupacionalId: processId },
+      select: { EmpresaId: true },
+    });
+
+    if (
+      !user ||
+      !process ||
+      (role !== 'ADMIN' &&
+        (role !== 'HR' || user.EmpresaId !== process.EmpresaId))
+    ) {
+      throw new NotFoundException('No se encontró el proceso ocupacional.');
+    }
+  }
 
   async findAll(userId: number, role: string): Promise<ProcessListItemDto[]> {
     const authUser = await this.prisma.usuario.findUnique({
