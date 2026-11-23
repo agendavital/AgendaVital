@@ -1,0 +1,67 @@
+.access-control-page__roles {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.access-control-role__heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.access-control-role__heading h2 {
+  margin: 0;
+}
+
+.access-control-role__heading p {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+}
+
+.access-control-role__locked {
+  border-radius: 999px;
+  padding: 0.35rem 0.75rem;
+  background: #e8f5ef;
+  color: #076b4e;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.access-control-role__groups {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.85rem;
+}
+
+.access-control-group {
+  min-width: 0;
+  margin: 0;
+  border: 1px solid #d8e0e8;
+  border-radius: 0.75rem;
+  padding: 0.75rem 0.9rem;
+}
+
+.access-control-group legend {
+  padding: 0 0.3rem;
+  color: #12304a;
+  font-weight: 700;
+}
+
+.access-control-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0;
+}
+
+.access-control-group input {
+  accent-color: #0b7555;
+}
+
+.access-control-role__actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 1rem;
+}

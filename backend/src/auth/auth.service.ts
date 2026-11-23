@@ -58,6 +58,7 @@ type UsuarioConRoles = {
   UsuarioRol: Array<{
     Rol: {
       Codigo: string;
+      RolPermiso: Array<{ Permiso: { Codigo: string } }>;
     };
   }>;
 };
@@ -77,7 +78,13 @@ export class AuthService {
       where: { Correo: email },
       include: {
         UsuarioRol: {
-          include: { Rol: true },
+          include: {
+            Rol: {
+              include: {
+                RolPermiso: { include: { Permiso: true } },
+              },
+            },
+          },
         },
       },
     });
@@ -126,7 +133,13 @@ export class AuthService {
       where: { Correo: email },
       include: {
         UsuarioRol: {
-          include: { Rol: true },
+          include: {
+            Rol: {
+              include: {
+                RolPermiso: { include: { Permiso: true } },
+              },
+            },
+          },
         },
       },
     });
@@ -143,7 +156,17 @@ export class AuthService {
   async getCurrentSession(userId: number) {
     const usuario = await this.prisma.usuario.findUnique({
       where: { UsuarioId: userId },
-      include: { UsuarioRol: { include: { Rol: true } } },
+      include: {
+        UsuarioRol: {
+          include: {
+            Rol: {
+              include: {
+                RolPermiso: { include: { Permiso: true } },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!usuario || !usuario.Activo) {
@@ -472,6 +495,13 @@ export class AuthService {
       name: `${usuario.Nombres} ${usuario.Apellidos}`.trim(),
       email: usuario.Correo,
       role,
+      permissions: Array.from(
+        new Set(
+          usuario.UsuarioRol.flatMap(({ Rol }) =>
+            Rol.RolPermiso.map(({ Permiso }) => Permiso.Codigo),
+          ),
+        ),
+      ),
     };
   }
 
