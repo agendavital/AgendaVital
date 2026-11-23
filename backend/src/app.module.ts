@@ -13,6 +13,10 @@ import { MedicosModule } from './modules/medicos/medicos.module';
 import { EvaluacionesModule } from './modules/evaluaciones/evaluaciones.module';
 import { AuditoriaModule } from './modules/auditoria/auditoria.module';
 import { NotificacionesModule } from './modules/notificaciones/notificaciones.module';
+import { ReportesModule } from './modules/reportes/reportes.module';
+import { AccessControlModule } from './modules/access-control/access-control.module';
+import { CandidatePortalModule } from './modules/candidate-portal/candidate-portal.module';
+import { DocumentosModule } from './modules/documentos/documentos.module';
 
 @Module({
   imports: [
@@ -31,6 +35,10 @@ import { NotificacionesModule } from './modules/notificaciones/notificaciones.mo
     EvaluacionesModule,
     AuditoriaModule,
     NotificacionesModule,
+    ReportesModule,
+    AccessControlModule,
+    CandidatePortalModule,
+    DocumentosModule,
   ],
   controllers: [AppController],
 })
