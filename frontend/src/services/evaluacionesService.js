@@ -14,3 +14,10 @@ export function createEvaluation(evaluation) {
     body: JSON.stringify(evaluation),
   });
 }
+
+export function acknowledgeWorkplaceProfile(appointmentId) {
+  return apiRequest(
+    `/medical-results/appointments/${appointmentId}/workplace-profile-receipt`,
+    { method: "PATCH" },
+  );
+}

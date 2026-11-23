@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "../components/ui/Button";
 import DataTable from "../components/ui/DataTable";
 import Field from "../components/ui/Field";
@@ -7,10 +7,37 @@ import {
   createProcess,
   getProcesses,
   getProcessOptions,
+  getWorkplaceProfile,
+  saveWorkplaceProfile,
 } from "../services/processesService";
 import "../styles/processes.css";
 
 const emptyOptions = { candidates: [], companies: [] };
+const emptyWorkplaceProfile = {
+  nombreCargo: "",
+  funcionesResponsabilidades: "",
+  habilidadesCompetencias: "",
+  requisitosFisicosMentales: "",
+  riesgosLaborales: "",
+  medidasPreventivas: "",
+  indicadoresEpidemiologicos: "",
+  matrizPeligrosRiesgos: "",
+  estudiosTecnicos: "",
+  indicadoresBiologicos: "",
+};
+
+const workplaceProfileFields = [
+  ["nombreCargo", "Nombre del cargo", "Ej. Auxiliar de bodega", 1],
+  ["funcionesResponsabilidades", "Funciones y responsabilidades", "Describe las tareas y responsabilidades del cargo.", 3],
+  ["habilidadesCompetencias", "Habilidades y competencias", "Indica las habilidades y competencias requeridas.", 3],
+  ["requisitosFisicosMentales", "Requisitos físicos, mentales y técnicos", "Describe las exigencias necesarias para desempeñar el cargo.", 3],
+  ["riesgosLaborales", "Riesgos laborales asociados", "Registra los peligros y factores de exposición identificados.", 3],
+  ["medidasPreventivas", "Medidas preventivas", "Describe controles y medidas para proteger la salud y seguridad.", 3],
+  ["indicadoresEpidemiologicos", "Indicadores epidemiológicos", "Resume indicadores relacionados con riesgos y condiciones de salud para este cargo; escribe “No aplica” si corresponde.", 3],
+  ["matrizPeligrosRiesgos", "Matriz de peligros y valoración de riesgos", "Resume los peligros, la valoración y los controles reflejados en la matriz vigente.", 3],
+  ["estudiosTecnicos", "Estudios técnicos adicionales", "Registra estudios pertinentes o escribe “No aplica”.", 3],
+  ["indicadoresBiologicos", "Indicadores biológicos", "Registra monitoreos biológicos cuando apliquen o escribe “No aplica”.", 3],
+];
 
 function formatProcessDate(value) {
   if (!value) return "—";
@@ -33,6 +60,48 @@ export default function ProcessesPage() {
   const [processesError, setProcessesError] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [createdProcess, setCreatedProcess] = useState(null);
+  const [profileProcessId, setProfileProcessId] = useState("");
+  const [workplaceProfile, setWorkplaceProfile] = useState(emptyWorkplaceProfile);
+  const [profileIsLoading, setProfileIsLoading] = useState(false);
+  const [profileIsSaving, setProfileIsSaving] = useState(false);
+  const [profileError, setProfileError] = useState("");
+  const [profileMessage, setProfileMessage] = useState("");
+  const profileRequestId = useRef(0);
+
+  async function handleProfileProcessChange(event) {
+    const nextProcessId = event.target.value;
+    setProfileProcessId(nextProcessId);
+    setWorkplaceProfile(emptyWorkplaceProfile);
+    setProfileError("");
+    setProfileMessage("");
+    const requestId = ++profileRequestId.current;
+
+    if (!nextProcessId) {
+      setProfileIsLoading(false);
+      return;
+    }
+
+    setProfileIsLoading(true);
+    try {
+      const profile = await getWorkplaceProfile(nextProcessId);
+      if (requestId !== profileRequestId.current) return;
+      if (profile) {
+        const profileValues = Object.fromEntries(
+          Object.keys(emptyWorkplaceProfile).map((key) => [key, profile[key]]),
+        );
+        setWorkplaceProfile({ ...emptyWorkplaceProfile, ...profileValues });
+        setProfileMessage(
+          `Información registrada el ${new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(new Date(profile.registradoEn))}.`,
+        );
+      }
+    } catch (error) {
+      if (requestId === profileRequestId.current) {
+        setProfileError(error.message ?? "No se pudo cargar la información del cargo.");
+      }
+    } finally {
+      if (requestId === profileRequestId.current) setProfileIsLoading(false);
+    }
+  }
 
   useEffect(() => {
     let isMounted = true;
@@ -101,6 +170,24 @@ export default function ProcessesPage() {
       setSubmitError(error.message ?? "No se pudo crear el proceso.");
     } finally {
       setIsSubmitting(false);
+    }
+  }
+
+  async function handleWorkplaceProfileSubmit(event) {
+    event.preventDefault();
+    setProfileError("");
+    setProfileMessage("");
+    setProfileIsSaving(true);
+
+    try {
+      const result = await saveWorkplaceProfile(profileProcessId, workplaceProfile);
+      setProfileMessage(
+        `${result.message} ${new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" }).format(new Date(result.registradoEn))}.`,
+      );
+    } catch (error) {
+      setProfileError(error.message ?? "No se pudo guardar la información del cargo.");
+    } finally {
+      setProfileIsSaving(false);
     }
   }
 
@@ -260,6 +347,76 @@ export default function ProcessesPage() {
             ]}
           />
         ) : null}
+      </section>
+
+      <section className="workplace-profile" aria-labelledby="workplace-profile-title">
+        <div className="workplace-profile__heading">
+          <p className="eyebrow">Información para la evaluación</p>
+          <h2 id="workplace-profile-title">Perfil del cargo y riesgos laborales</h2>
+          <p>
+            Registra la información que la empresa entrega para contextualizar la evaluación ocupacional. En los campos que no correspondan, escribe “No aplica”.
+          </p>
+          <small>Referencia funcional: Resolución 1843 de 2025, artículo 16. Este registro no reemplaza la entrega de documentos soporte.</small>
+        </div>
+
+        {processes.length === 0 ? (
+          <p className="alert alert-warning" role="status">Primero crea un proceso ocupacional para asociar la información del cargo.</p>
+        ) : (
+          <form className="workplace-profile__form" onSubmit={handleWorkplaceProfileSubmit}>
+            <Field label="Proceso ocupacional">
+              <select
+                required
+                value={profileProcessId}
+                onChange={handleProfileProcessChange}
+              >
+                <option value="">Selecciona un proceso</option>
+                {processes.map((process) => (
+                  <option key={process.id} value={process.id}>
+                    {process.candidateName} · {process.company} · {process.status}
+                  </option>
+                ))}
+              </select>
+            </Field>
+
+            {profileIsLoading ? <p role="status">Cargando información del cargo...</p> : null}
+            {profileError ? <p className="alert alert-error" role="alert">{profileError}</p> : null}
+            {profileMessage ? <p className="alert alert-success" role="status">{profileMessage}</p> : null}
+
+            {profileProcessId ? (
+              <>
+                <div className="workplace-profile__fields">
+                  {workplaceProfileFields.map(([name, label, placeholder, rows]) => (
+                    <Field key={name} label={label}>
+                      {rows === 1 ? (
+                        <input
+                          required
+                          maxLength={120}
+                          value={workplaceProfile[name]}
+                          onChange={(event) => setWorkplaceProfile((current) => ({ ...current, [name]: event.target.value }))}
+                          placeholder={placeholder}
+                        />
+                      ) : (
+                        <textarea
+                          required
+                          maxLength={5000}
+                          rows={rows}
+                          value={workplaceProfile[name]}
+                          onChange={(event) => setWorkplaceProfile((current) => ({ ...current, [name]: event.target.value }))}
+                          placeholder={placeholder}
+                        />
+                      )}
+                    </Field>
+                  ))}
+                </div>
+                <div className="processes-form__actions">
+                  <Button type="submit" disabled={profileIsLoading || profileIsSaving}>
+                    {profileIsSaving ? "Guardando información..." : "Guardar información del cargo"}
+                  </Button>
+                </div>
+              </>
+            ) : null}
+          </form>
+        )}
       </section>
     </section>
   );
