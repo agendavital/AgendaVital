@@ -234,6 +234,7 @@ export type ProfesionalWhereInput = {
   Activo?: Prisma.BoolFilter<"Profesional"> | boolean
   Disponibilidad?: Prisma.DisponibilidadListRelationFilter
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalListRelationFilter
+  PerfilCargoRecibido?: Prisma.PerfilCargoListRelationFilter
   Clinica?: Prisma.XOR<Prisma.ClinicaScalarRelationFilter, Prisma.ClinicaWhereInput>
   Usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
 }
@@ -247,6 +248,7 @@ export type ProfesionalOrderByWithRelationInput = {
   Activo?: Prisma.SortOrder
   Disponibilidad?: Prisma.DisponibilidadOrderByRelationAggregateInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalOrderByRelationAggregateInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoOrderByRelationAggregateInput
   Clinica?: Prisma.ClinicaOrderByWithRelationInput
   Usuario?: Prisma.UsuarioOrderByWithRelationInput
 }
@@ -263,6 +265,7 @@ export type ProfesionalWhereUniqueInput = Prisma.AtLeast<{
   Activo?: Prisma.BoolFilter<"Profesional"> | boolean
   Disponibilidad?: Prisma.DisponibilidadListRelationFilter
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalListRelationFilter
+  PerfilCargoRecibido?: Prisma.PerfilCargoListRelationFilter
   Clinica?: Prisma.XOR<Prisma.ClinicaScalarRelationFilter, Prisma.ClinicaWhereInput>
   Usuario?: Prisma.XOR<Prisma.UsuarioScalarRelationFilter, Prisma.UsuarioWhereInput>
 }, "ProfesionalId" | "UsuarioId" | "RegistroProfesional">
@@ -299,6 +302,7 @@ export type ProfesionalCreateInput = {
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadCreateNestedManyWithoutProfesionalInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoCreateNestedManyWithoutProfesionalInput
   Clinica: Prisma.ClinicaCreateNestedOneWithoutProfesionalInput
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProfesionalInput
 }
@@ -312,6 +316,7 @@ export type ProfesionalUncheckedCreateInput = {
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedCreateNestedManyWithoutProfesionalInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedCreateNestedManyWithoutProfesionalInput
 }
 
 export type ProfesionalUpdateInput = {
@@ -320,6 +325,7 @@ export type ProfesionalUpdateInput = {
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUpdateManyWithoutProfesionalNestedInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUpdateManyWithoutProfesionalNestedInput
   Clinica?: Prisma.ClinicaUpdateOneRequiredWithoutProfesionalNestedInput
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProfesionalNestedInput
 }
@@ -333,6 +339,7 @@ export type ProfesionalUncheckedUpdateInput = {
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedUpdateManyWithoutProfesionalNestedInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedUpdateManyWithoutProfesionalNestedInput
 }
 
 export type ProfesionalCreateManyInput = {
@@ -489,6 +496,22 @@ export type ProfesionalUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput 
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProfesionalUpdateToOneWithWhereWithoutEvaluacionOcupacionalInput, Prisma.ProfesionalUpdateWithoutEvaluacionOcupacionalInput>, Prisma.ProfesionalUncheckedUpdateWithoutEvaluacionOcupacionalInput>
 }
 
+export type ProfesionalCreateNestedOneWithoutPerfilCargoRecibidoInput = {
+  create?: Prisma.XOR<Prisma.ProfesionalCreateWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUncheckedCreateWithoutPerfilCargoRecibidoInput>
+  connectOrCreate?: Prisma.ProfesionalCreateOrConnectWithoutPerfilCargoRecibidoInput
+  connect?: Prisma.ProfesionalWhereUniqueInput
+}
+
+export type ProfesionalUpdateOneWithoutPerfilCargoRecibidoNestedInput = {
+  create?: Prisma.XOR<Prisma.ProfesionalCreateWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUncheckedCreateWithoutPerfilCargoRecibidoInput>
+  connectOrCreate?: Prisma.ProfesionalCreateOrConnectWithoutPerfilCargoRecibidoInput
+  upsert?: Prisma.ProfesionalUpsertWithoutPerfilCargoRecibidoInput
+  disconnect?: Prisma.ProfesionalWhereInput | boolean
+  delete?: Prisma.ProfesionalWhereInput | boolean
+  connect?: Prisma.ProfesionalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProfesionalUpdateToOneWithWhereWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUpdateWithoutPerfilCargoRecibidoInput>, Prisma.ProfesionalUncheckedUpdateWithoutPerfilCargoRecibidoInput>
+}
+
 export type ProfesionalCreateNestedOneWithoutUsuarioInput = {
   create?: Prisma.XOR<Prisma.ProfesionalCreateWithoutUsuarioInput, Prisma.ProfesionalUncheckedCreateWithoutUsuarioInput>
   connectOrCreate?: Prisma.ProfesionalCreateOrConnectWithoutUsuarioInput
@@ -527,6 +550,7 @@ export type ProfesionalCreateWithoutClinicaInput = {
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadCreateNestedManyWithoutProfesionalInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoCreateNestedManyWithoutProfesionalInput
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProfesionalInput
 }
 
@@ -538,6 +562,7 @@ export type ProfesionalUncheckedCreateWithoutClinicaInput = {
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedCreateNestedManyWithoutProfesionalInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedCreateNestedManyWithoutProfesionalInput
 }
 
 export type ProfesionalCreateOrConnectWithoutClinicaInput = {
@@ -582,6 +607,7 @@ export type ProfesionalCreateWithoutDisponibilidadInput = {
   Especialidad?: string | null
   Activo?: boolean
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoCreateNestedManyWithoutProfesionalInput
   Clinica: Prisma.ClinicaCreateNestedOneWithoutProfesionalInput
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProfesionalInput
 }
@@ -594,6 +620,7 @@ export type ProfesionalUncheckedCreateWithoutDisponibilidadInput = {
   Especialidad?: string | null
   Activo?: boolean
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedCreateNestedManyWithoutProfesionalInput
 }
 
 export type ProfesionalCreateOrConnectWithoutDisponibilidadInput = {
@@ -617,6 +644,7 @@ export type ProfesionalUpdateWithoutDisponibilidadInput = {
   Especialidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUpdateManyWithoutProfesionalNestedInput
   Clinica?: Prisma.ClinicaUpdateOneRequiredWithoutProfesionalNestedInput
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProfesionalNestedInput
 }
@@ -629,6 +657,7 @@ export type ProfesionalUncheckedUpdateWithoutDisponibilidadInput = {
   Especialidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedUpdateManyWithoutProfesionalNestedInput
 }
 
 export type ProfesionalCreateWithoutEvaluacionOcupacionalInput = {
@@ -636,6 +665,7 @@ export type ProfesionalCreateWithoutEvaluacionOcupacionalInput = {
   Especialidad?: string | null
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoCreateNestedManyWithoutProfesionalInput
   Clinica: Prisma.ClinicaCreateNestedOneWithoutProfesionalInput
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProfesionalInput
 }
@@ -648,6 +678,7 @@ export type ProfesionalUncheckedCreateWithoutEvaluacionOcupacionalInput = {
   Especialidad?: string | null
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedCreateNestedManyWithoutProfesionalInput
 }
 
 export type ProfesionalCreateOrConnectWithoutEvaluacionOcupacionalInput = {
@@ -671,6 +702,7 @@ export type ProfesionalUpdateWithoutEvaluacionOcupacionalInput = {
   Especialidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUpdateManyWithoutProfesionalNestedInput
   Clinica?: Prisma.ClinicaUpdateOneRequiredWithoutProfesionalNestedInput
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProfesionalNestedInput
 }
@@ -683,6 +715,65 @@ export type ProfesionalUncheckedUpdateWithoutEvaluacionOcupacionalInput = {
   Especialidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedUpdateManyWithoutProfesionalNestedInput
+}
+
+export type ProfesionalCreateWithoutPerfilCargoRecibidoInput = {
+  RegistroProfesional: string
+  Especialidad?: string | null
+  Activo?: boolean
+  Disponibilidad?: Prisma.DisponibilidadCreateNestedManyWithoutProfesionalInput
+  EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalCreateNestedManyWithoutProfesionalInput
+  Clinica: Prisma.ClinicaCreateNestedOneWithoutProfesionalInput
+  Usuario: Prisma.UsuarioCreateNestedOneWithoutProfesionalInput
+}
+
+export type ProfesionalUncheckedCreateWithoutPerfilCargoRecibidoInput = {
+  ProfesionalId?: number
+  UsuarioId: number
+  ClinicaId: number
+  RegistroProfesional: string
+  Especialidad?: string | null
+  Activo?: boolean
+  Disponibilidad?: Prisma.DisponibilidadUncheckedCreateNestedManyWithoutProfesionalInput
+  EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedCreateNestedManyWithoutProfesionalInput
+}
+
+export type ProfesionalCreateOrConnectWithoutPerfilCargoRecibidoInput = {
+  where: Prisma.ProfesionalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProfesionalCreateWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUncheckedCreateWithoutPerfilCargoRecibidoInput>
+}
+
+export type ProfesionalUpsertWithoutPerfilCargoRecibidoInput = {
+  update: Prisma.XOR<Prisma.ProfesionalUpdateWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUncheckedUpdateWithoutPerfilCargoRecibidoInput>
+  create: Prisma.XOR<Prisma.ProfesionalCreateWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUncheckedCreateWithoutPerfilCargoRecibidoInput>
+  where?: Prisma.ProfesionalWhereInput
+}
+
+export type ProfesionalUpdateToOneWithWhereWithoutPerfilCargoRecibidoInput = {
+  where?: Prisma.ProfesionalWhereInput
+  data: Prisma.XOR<Prisma.ProfesionalUpdateWithoutPerfilCargoRecibidoInput, Prisma.ProfesionalUncheckedUpdateWithoutPerfilCargoRecibidoInput>
+}
+
+export type ProfesionalUpdateWithoutPerfilCargoRecibidoInput = {
+  RegistroProfesional?: Prisma.StringFieldUpdateOperationsInput | string
+  Especialidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  Disponibilidad?: Prisma.DisponibilidadUpdateManyWithoutProfesionalNestedInput
+  EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUpdateManyWithoutProfesionalNestedInput
+  Clinica?: Prisma.ClinicaUpdateOneRequiredWithoutProfesionalNestedInput
+  Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProfesionalNestedInput
+}
+
+export type ProfesionalUncheckedUpdateWithoutPerfilCargoRecibidoInput = {
+  ProfesionalId?: Prisma.IntFieldUpdateOperationsInput | number
+  UsuarioId?: Prisma.IntFieldUpdateOperationsInput | number
+  ClinicaId?: Prisma.IntFieldUpdateOperationsInput | number
+  RegistroProfesional?: Prisma.StringFieldUpdateOperationsInput | string
+  Especialidad?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  Disponibilidad?: Prisma.DisponibilidadUncheckedUpdateManyWithoutProfesionalNestedInput
+  EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalNestedInput
 }
 
 export type ProfesionalCreateWithoutUsuarioInput = {
@@ -691,6 +782,7 @@ export type ProfesionalCreateWithoutUsuarioInput = {
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadCreateNestedManyWithoutProfesionalInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoCreateNestedManyWithoutProfesionalInput
   Clinica: Prisma.ClinicaCreateNestedOneWithoutProfesionalInput
 }
 
@@ -702,6 +794,7 @@ export type ProfesionalUncheckedCreateWithoutUsuarioInput = {
   Activo?: boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedCreateNestedManyWithoutProfesionalInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedCreateNestedManyWithoutProfesionalInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedCreateNestedManyWithoutProfesionalInput
 }
 
 export type ProfesionalCreateOrConnectWithoutUsuarioInput = {
@@ -726,6 +819,7 @@ export type ProfesionalUpdateWithoutUsuarioInput = {
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUpdateManyWithoutProfesionalNestedInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUpdateManyWithoutProfesionalNestedInput
   Clinica?: Prisma.ClinicaUpdateOneRequiredWithoutProfesionalNestedInput
 }
 
@@ -737,6 +831,7 @@ export type ProfesionalUncheckedUpdateWithoutUsuarioInput = {
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedUpdateManyWithoutProfesionalNestedInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedUpdateManyWithoutProfesionalNestedInput
 }
 
 export type ProfesionalCreateManyClinicaInput = {
@@ -752,6 +847,7 @@ export type ProfesionalUpdateWithoutClinicaInput = {
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUpdateManyWithoutProfesionalNestedInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUpdateManyWithoutProfesionalNestedInput
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProfesionalNestedInput
 }
 
@@ -763,6 +859,7 @@ export type ProfesionalUncheckedUpdateWithoutClinicaInput = {
   Activo?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Disponibilidad?: Prisma.DisponibilidadUncheckedUpdateManyWithoutProfesionalNestedInput
   EvaluacionOcupacional?: Prisma.EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalNestedInput
+  PerfilCargoRecibido?: Prisma.PerfilCargoUncheckedUpdateManyWithoutProfesionalNestedInput
 }
 
 export type ProfesionalUncheckedUpdateManyWithoutClinicaInput = {
@@ -781,11 +878,13 @@ export type ProfesionalUncheckedUpdateManyWithoutClinicaInput = {
 export type ProfesionalCountOutputType = {
   Disponibilidad: number
   EvaluacionOcupacional: number
+  PerfilCargoRecibido: number
 }
 
 export type ProfesionalCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Disponibilidad?: boolean | ProfesionalCountOutputTypeCountDisponibilidadArgs
   EvaluacionOcupacional?: boolean | ProfesionalCountOutputTypeCountEvaluacionOcupacionalArgs
+  PerfilCargoRecibido?: boolean | ProfesionalCountOutputTypeCountPerfilCargoRecibidoArgs
 }
 
 /**
@@ -812,6 +911,13 @@ export type ProfesionalCountOutputTypeCountEvaluacionOcupacionalArgs<ExtArgs ext
   where?: Prisma.EvaluacionOcupacionalWhereInput
 }
 
+/**
+ * ProfesionalCountOutputType without action
+ */
+export type ProfesionalCountOutputTypeCountPerfilCargoRecibidoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.PerfilCargoWhereInput
+}
+
 
 export type ProfesionalSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   ProfesionalId?: boolean
@@ -822,6 +928,7 @@ export type ProfesionalSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   Activo?: boolean
   Disponibilidad?: boolean | Prisma.Profesional$DisponibilidadArgs<ExtArgs>
   EvaluacionOcupacional?: boolean | Prisma.Profesional$EvaluacionOcupacionalArgs<ExtArgs>
+  PerfilCargoRecibido?: boolean | Prisma.Profesional$PerfilCargoRecibidoArgs<ExtArgs>
   Clinica?: boolean | Prisma.ClinicaDefaultArgs<ExtArgs>
   Usuario?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ProfesionalCountOutputTypeDefaultArgs<ExtArgs>
@@ -842,6 +949,7 @@ export type ProfesionalOmit<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type ProfesionalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Disponibilidad?: boolean | Prisma.Profesional$DisponibilidadArgs<ExtArgs>
   EvaluacionOcupacional?: boolean | Prisma.Profesional$EvaluacionOcupacionalArgs<ExtArgs>
+  PerfilCargoRecibido?: boolean | Prisma.Profesional$PerfilCargoRecibidoArgs<ExtArgs>
   Clinica?: boolean | Prisma.ClinicaDefaultArgs<ExtArgs>
   Usuario?: boolean | Prisma.UsuarioDefaultArgs<ExtArgs>
   _count?: boolean | Prisma.ProfesionalCountOutputTypeDefaultArgs<ExtArgs>
@@ -852,6 +960,7 @@ export type $ProfesionalPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     Disponibilidad: Prisma.$DisponibilidadPayload<ExtArgs>[]
     EvaluacionOcupacional: Prisma.$EvaluacionOcupacionalPayload<ExtArgs>[]
+    PerfilCargoRecibido: Prisma.$PerfilCargoPayload<ExtArgs>[]
     Clinica: Prisma.$ClinicaPayload<ExtArgs>
     Usuario: Prisma.$UsuarioPayload<ExtArgs>
   }
@@ -1204,6 +1313,7 @@ export interface Prisma__ProfesionalClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   Disponibilidad<T extends Prisma.Profesional$DisponibilidadArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profesional$DisponibilidadArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisponibilidadPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   EvaluacionOcupacional<T extends Prisma.Profesional$EvaluacionOcupacionalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profesional$EvaluacionOcupacionalArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EvaluacionOcupacionalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  PerfilCargoRecibido<T extends Prisma.Profesional$PerfilCargoRecibidoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Profesional$PerfilCargoRecibidoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PerfilCargoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Clinica<T extends Prisma.ClinicaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClinicaDefaultArgs<ExtArgs>>): Prisma.Prisma__ClinicaClient<runtime.Types.Result.GetResult<Prisma.$ClinicaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   Usuario<T extends Prisma.UsuarioDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UsuarioDefaultArgs<ExtArgs>>): Prisma.Prisma__UsuarioClient<runtime.Types.Result.GetResult<Prisma.$UsuarioPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1633,6 +1743,30 @@ export type Profesional$EvaluacionOcupacionalArgs<ExtArgs extends runtime.Types.
   take?: number
   skip?: number
   distinct?: Prisma.EvaluacionOcupacionalScalarFieldEnum | Prisma.EvaluacionOcupacionalScalarFieldEnum[]
+}
+
+/**
+ * Profesional.PerfilCargoRecibido
+ */
+export type Profesional$PerfilCargoRecibidoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PerfilCargo
+   */
+  select?: Prisma.PerfilCargoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PerfilCargo
+   */
+  omit?: Prisma.PerfilCargoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PerfilCargoInclude<ExtArgs> | null
+  where?: Prisma.PerfilCargoWhereInput
+  orderBy?: Prisma.PerfilCargoOrderByWithRelationInput | Prisma.PerfilCargoOrderByWithRelationInput[]
+  cursor?: Prisma.PerfilCargoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.PerfilCargoScalarFieldEnum | Prisma.PerfilCargoScalarFieldEnum[]
 }
 
 /**

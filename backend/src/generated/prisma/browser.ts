@@ -88,6 +88,11 @@ export type EstadoSolicitud = Prisma.EstadoSolicitudModel
  */
 export type EvaluacionOcupacional = Prisma.EvaluacionOcupacionalModel
 /**
+ * Model MedicamentoReportado
+ * 
+ */
+export type MedicamentoReportado = Prisma.MedicamentoReportadoModel
+/**
  * Model IntentoNotificacion
  * 
  */
@@ -107,6 +112,11 @@ export type Permiso = Prisma.PermisoModel
  * 
  */
 export type ProcesoOcupacional = Prisma.ProcesoOcupacionalModel
+/**
+ * Model PerfilCargo
+ * 
+ */
+export type PerfilCargo = Prisma.PerfilCargoModel
 /**
  * Model Profesional
  * 

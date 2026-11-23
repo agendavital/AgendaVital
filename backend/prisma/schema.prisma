@@ -1,8 +1,8 @@
 generator client {
   provider        = "prisma-client"
   previewFeatures = ["partialIndexes"]
-  output = "../src/generated/prisma"
-  moduleFormat = "cjs"
+  output          = "../src/generated/prisma"
+  moduleFormat    = "cjs"
 }
 
 datasource db {
@@ -168,20 +168,34 @@ model EstadoSolicitud {
 }
 
 model EvaluacionOcupacional {
-  EvaluacionOcupacionalId    BigInt               @id(map: "PK_EvaluacionOcupacional") @default(autoincrement())
-  CitaId                     BigInt               @unique(map: "UQ_Evaluacion_Cita")
+  EvaluacionOcupacionalId    BigInt                 @id(map: "PK_EvaluacionOcupacional") @default(autoincrement())
+  CitaId                     BigInt                 @unique(map: "UQ_Evaluacion_Cita")
   ProfesionalId              Int
-  ConceptoOcupacionalId      Int?                 @db.TinyInt
-  ResultadoResumen           String?              @db.NVarChar(2000)
-  Hallazgos                  String?              @db.NVarChar(Max)
-  ObservacionClinica         String?              @db.NVarChar(Max)
-  CertificadoUbicacionSegura String?              @db.NVarChar(700)
-  EvaluadaEn                 DateTime             @default(dbgenerated("sysutcdatetime()"), map: "DF_Evaluacion_EvaluadaEn")
+  ConceptoOcupacionalId      Int?                   @db.TinyInt
+  ResultadoResumen           String?                @db.NVarChar(2000)
+  Hallazgos                  String?                @db.NVarChar(Max)
+  ObservacionClinica         String?                @db.NVarChar(Max)
+  CertificadoUbicacionSegura String?                @db.NVarChar(700)
+  TomaMedicamentos           Boolean?
+  MedicamentosRevisados      Boolean?
+  EvaluadaEn                 DateTime               @default(dbgenerated("sysutcdatetime()"), map: "DF_Evaluacion_EvaluadaEn")
   CerradaEn                  DateTime?
-  Cita                       Cita                 @relation(fields: [CitaId], references: [CitaId], onUpdate: NoAction, map: "FK_Evaluacion_Cita")
-  ConceptoOcupacional        ConceptoOcupacional? @relation(fields: [ConceptoOcupacionalId], references: [ConceptoOcupacionalId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Evaluacion_Concepto")
-  Profesional                Profesional          @relation(fields: [ProfesionalId], references: [ProfesionalId], onUpdate: NoAction, map: "FK_Evaluacion_Profesional")
+  Cita                       Cita                   @relation(fields: [CitaId], references: [CitaId], onUpdate: NoAction, map: "FK_Evaluacion_Cita")
+  ConceptoOcupacional        ConceptoOcupacional?   @relation(fields: [ConceptoOcupacionalId], references: [ConceptoOcupacionalId], onDelete: NoAction, onUpdate: NoAction, map: "FK_Evaluacion_Concepto")
+  Profesional                Profesional            @relation(fields: [ProfesionalId], references: [ProfesionalId], onUpdate: NoAction, map: "FK_Evaluacion_Profesional")
+  MedicamentoReportado       MedicamentoReportado[]
   Restriccion                Restriccion[]
+}
+
+model MedicamentoReportado {
+  MedicamentoReportadoId  BigInt                @id(map: "PK_MedicamentoReportado") @default(autoincrement())
+  EvaluacionOcupacionalId BigInt
+  Nombre                  String                @db.NVarChar(160)
+  Dosis                   String?               @db.NVarChar(120)
+  Frecuencia              String?               @db.NVarChar(120)
+  EvaluacionOcupacional   EvaluacionOcupacional @relation(fields: [EvaluacionOcupacionalId], references: [EvaluacionOcupacionalId], onUpdate: NoAction, map: "FK_MedicamentoReportado_Evaluacion")
+
+  @@index([EvaluacionOcupacionalId], map: "IX_MedicamentoReportado_Evaluacion")
 }
 
 model IntentoNotificacion {
@@ -242,9 +256,32 @@ model ProcesoOcupacional {
   Empresa                   Empresa            @relation(fields: [EmpresaId], references: [EmpresaId], onUpdate: NoAction, map: "FK_Proceso_Empresa")
   EstadoProceso             EstadoProceso      @relation(fields: [EstadoProcesoId], references: [EstadoProcesoId], onUpdate: NoAction, map: "FK_Proceso_Estado")
   SolicitudExamen           SolicitudExamen[]
+  PerfilCargo               PerfilCargo?
 
   @@index([CandidatoId, FechaInicio(sort: Desc)], map: "IX_Proceso_Candidato")
   @@index([EmpresaId, EstadoProcesoId, FechaInicio(sort: Desc)], map: "IX_Proceso_EmpresaEstado")
+}
+
+model PerfilCargo {
+  PerfilCargoId              BigInt             @id(map: "PK_PerfilCargo") @default(autoincrement())
+  ProcesoOcupacionalId       BigInt             @unique(map: "UQ_PerfilCargo_Proceso")
+  NombreCargo                String             @db.NVarChar(120)
+  FuncionesResponsabilidades String             @db.NVarChar(Max)
+  HabilidadesCompetencias    String             @db.NVarChar(Max)
+  RequisitosFisicosMentales  String             @db.NVarChar(Max)
+  RiesgosLaborales           String             @db.NVarChar(Max)
+  MedidasPreventivas         String             @db.NVarChar(Max)
+  IndicadoresEpidemiologicos String             @db.NVarChar(Max)
+  MatrizPeligrosRiesgos      String             @db.NVarChar(Max)
+  EstudiosTecnicos           String             @db.NVarChar(Max)
+  IndicadoresBiologicos      String             @db.NVarChar(Max)
+  RegistradoPorUsuarioId     Int
+  RegistradoEn               DateTime           @default(dbgenerated("sysutcdatetime()"), map: "DF_PerfilCargo_RegistradoEn")
+  RecibidoPorProfesionalId   Int?
+  RecibidoEn                 DateTime?
+  ProcesoOcupacional         ProcesoOcupacional @relation(fields: [ProcesoOcupacionalId], references: [ProcesoOcupacionalId], onDelete: NoAction, onUpdate: NoAction, map: "FK_PerfilCargo_Proceso")
+  Usuario                    Usuario            @relation(fields: [RegistradoPorUsuarioId], references: [UsuarioId], onDelete: NoAction, onUpdate: NoAction, map: "FK_PerfilCargo_RegistradoPor")
+  Profesional                Profesional?       @relation("PerfilCargo_RecibidoPor", fields: [RecibidoPorProfesionalId], references: [ProfesionalId], onDelete: NoAction, onUpdate: NoAction, map: "FK_PerfilCargo_RecibidoPor")
 }
 
 model Profesional {
@@ -256,6 +293,7 @@ model Profesional {
   Activo                Boolean                 @default(true, map: "DF_Profesional_Activo")
   Disponibilidad        Disponibilidad[]
   EvaluacionOcupacional EvaluacionOcupacional[]
+  PerfilCargoRecibido   PerfilCargo[]           @relation("PerfilCargo_RecibidoPor")
   Clinica               Clinica                 @relation(fields: [ClinicaId], references: [ClinicaId], onUpdate: NoAction, map: "FK_Profesional_Clinica")
   Usuario               Usuario                 @relation(fields: [UsuarioId], references: [UsuarioId], onUpdate: NoAction, map: "FK_Profesional_Usuario")
 }
@@ -361,6 +399,7 @@ model Usuario {
   DocumentoProceso_DocumentoProceso_RevisadoPorUsuarioIdToUsuario DocumentoProceso[]   @relation("DocumentoProceso_RevisadoPorUsuarioIdToUsuario")
   DocumentoProceso_DocumentoProceso_SubidoPorUsuarioIdToUsuario   DocumentoProceso[]   @relation("DocumentoProceso_SubidoPorUsuarioIdToUsuario")
   Notificacion                                                    Notificacion[]
+  PerfilCargo                                                     PerfilCargo[]
   ProcesoOcupacional                                              ProcesoOcupacional[]
   Profesional                                                     Profesional?
   SolicitudExamen                                                 SolicitudExamen[]

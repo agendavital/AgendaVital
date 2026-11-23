@@ -65,10 +65,12 @@ export const ModelName = {
   EstadoProceso: 'EstadoProceso',
   EstadoSolicitud: 'EstadoSolicitud',
   EvaluacionOcupacional: 'EvaluacionOcupacional',
+  MedicamentoReportado: 'MedicamentoReportado',
   IntentoNotificacion: 'IntentoNotificacion',
   Notificacion: 'Notificacion',
   Permiso: 'Permiso',
   ProcesoOcupacional: 'ProcesoOcupacional',
+  PerfilCargo: 'PerfilCargo',
   Profesional: 'Profesional',
   Restriccion: 'Restriccion',
   Rol: 'Rol',
@@ -267,11 +269,24 @@ export const EvaluacionOcupacionalScalarFieldEnum = {
   Hallazgos: 'Hallazgos',
   ObservacionClinica: 'ObservacionClinica',
   CertificadoUbicacionSegura: 'CertificadoUbicacionSegura',
+  TomaMedicamentos: 'TomaMedicamentos',
+  MedicamentosRevisados: 'MedicamentosRevisados',
   EvaluadaEn: 'EvaluadaEn',
   CerradaEn: 'CerradaEn'
 } as const
 
 export type EvaluacionOcupacionalScalarFieldEnum = (typeof EvaluacionOcupacionalScalarFieldEnum)[keyof typeof EvaluacionOcupacionalScalarFieldEnum]
+
+
+export const MedicamentoReportadoScalarFieldEnum = {
+  MedicamentoReportadoId: 'MedicamentoReportadoId',
+  EvaluacionOcupacionalId: 'EvaluacionOcupacionalId',
+  Nombre: 'Nombre',
+  Dosis: 'Dosis',
+  Frecuencia: 'Frecuencia'
+} as const
+
+export type MedicamentoReportadoScalarFieldEnum = (typeof MedicamentoReportadoScalarFieldEnum)[keyof typeof MedicamentoReportadoScalarFieldEnum]
 
 
 export const IntentoNotificacionScalarFieldEnum = {
@@ -327,6 +342,28 @@ export const ProcesoOcupacionalScalarFieldEnum = {
 } as const
 
 export type ProcesoOcupacionalScalarFieldEnum = (typeof ProcesoOcupacionalScalarFieldEnum)[keyof typeof ProcesoOcupacionalScalarFieldEnum]
+
+
+export const PerfilCargoScalarFieldEnum = {
+  PerfilCargoId: 'PerfilCargoId',
+  ProcesoOcupacionalId: 'ProcesoOcupacionalId',
+  NombreCargo: 'NombreCargo',
+  FuncionesResponsabilidades: 'FuncionesResponsabilidades',
+  HabilidadesCompetencias: 'HabilidadesCompetencias',
+  RequisitosFisicosMentales: 'RequisitosFisicosMentales',
+  RiesgosLaborales: 'RiesgosLaborales',
+  MedidasPreventivas: 'MedidasPreventivas',
+  IndicadoresEpidemiologicos: 'IndicadoresEpidemiologicos',
+  MatrizPeligrosRiesgos: 'MatrizPeligrosRiesgos',
+  EstudiosTecnicos: 'EstudiosTecnicos',
+  IndicadoresBiologicos: 'IndicadoresBiologicos',
+  RegistradoPorUsuarioId: 'RegistradoPorUsuarioId',
+  RegistradoEn: 'RegistradoEn',
+  RecibidoPorProfesionalId: 'RecibidoPorProfesionalId',
+  RecibidoEn: 'RecibidoEn'
+} as const
+
+export type PerfilCargoScalarFieldEnum = (typeof PerfilCargoScalarFieldEnum)[keyof typeof PerfilCargoScalarFieldEnum]
 
 
 export const ProfesionalScalarFieldEnum = {

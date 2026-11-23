@@ -271,6 +271,7 @@ export type ProcesoOcupacionalWhereInput = {
   Empresa?: Prisma.XOR<Prisma.EmpresaScalarRelationFilter, Prisma.EmpresaWhereInput>
   EstadoProceso?: Prisma.XOR<Prisma.EstadoProcesoScalarRelationFilter, Prisma.EstadoProcesoWhereInput>
   SolicitudExamen?: Prisma.SolicitudExamenListRelationFilter
+  PerfilCargo?: Prisma.XOR<Prisma.PerfilCargoNullableScalarRelationFilter, Prisma.PerfilCargoWhereInput> | null
 }
 
 export type ProcesoOcupacionalOrderByWithRelationInput = {
@@ -290,6 +291,7 @@ export type ProcesoOcupacionalOrderByWithRelationInput = {
   Empresa?: Prisma.EmpresaOrderByWithRelationInput
   EstadoProceso?: Prisma.EstadoProcesoOrderByWithRelationInput
   SolicitudExamen?: Prisma.SolicitudExamenOrderByRelationAggregateInput
+  PerfilCargo?: Prisma.PerfilCargoOrderByWithRelationInput
 }
 
 export type ProcesoOcupacionalWhereUniqueInput = Prisma.AtLeast<{
@@ -312,6 +314,7 @@ export type ProcesoOcupacionalWhereUniqueInput = Prisma.AtLeast<{
   Empresa?: Prisma.XOR<Prisma.EmpresaScalarRelationFilter, Prisma.EmpresaWhereInput>
   EstadoProceso?: Prisma.XOR<Prisma.EstadoProcesoScalarRelationFilter, Prisma.EstadoProcesoWhereInput>
   SolicitudExamen?: Prisma.SolicitudExamenListRelationFilter
+  PerfilCargo?: Prisma.XOR<Prisma.PerfilCargoNullableScalarRelationFilter, Prisma.PerfilCargoWhereInput> | null
 }, "ProcesoOcupacionalId">
 
 export type ProcesoOcupacionalOrderByWithAggregationInput = {
@@ -359,6 +362,7 @@ export type ProcesoOcupacionalCreateInput = {
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateInput = {
@@ -374,6 +378,7 @@ export type ProcesoOcupacionalUncheckedCreateInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUpdateInput = {
@@ -389,6 +394,7 @@ export type ProcesoOcupacionalUpdateInput = {
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateInput = {
@@ -404,6 +410,7 @@ export type ProcesoOcupacionalUncheckedUpdateInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalCreateManyInput = {
@@ -665,6 +672,20 @@ export type ProcesoOcupacionalUpdateOneWithoutNotificacionNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ProcesoOcupacionalUpdateToOneWithWhereWithoutNotificacionInput, Prisma.ProcesoOcupacionalUpdateWithoutNotificacionInput>, Prisma.ProcesoOcupacionalUncheckedUpdateWithoutNotificacionInput>
 }
 
+export type ProcesoOcupacionalCreateNestedOneWithoutPerfilCargoInput = {
+  create?: Prisma.XOR<Prisma.ProcesoOcupacionalCreateWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUncheckedCreateWithoutPerfilCargoInput>
+  connectOrCreate?: Prisma.ProcesoOcupacionalCreateOrConnectWithoutPerfilCargoInput
+  connect?: Prisma.ProcesoOcupacionalWhereUniqueInput
+}
+
+export type ProcesoOcupacionalUpdateOneRequiredWithoutPerfilCargoNestedInput = {
+  create?: Prisma.XOR<Prisma.ProcesoOcupacionalCreateWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUncheckedCreateWithoutPerfilCargoInput>
+  connectOrCreate?: Prisma.ProcesoOcupacionalCreateOrConnectWithoutPerfilCargoInput
+  upsert?: Prisma.ProcesoOcupacionalUpsertWithoutPerfilCargoInput
+  connect?: Prisma.ProcesoOcupacionalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ProcesoOcupacionalUpdateToOneWithWhereWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUpdateWithoutPerfilCargoInput>, Prisma.ProcesoOcupacionalUncheckedUpdateWithoutPerfilCargoInput>
+}
+
 export type ProcesoOcupacionalCreateNestedOneWithoutSolicitudExamenInput = {
   create?: Prisma.XOR<Prisma.ProcesoOcupacionalCreateWithoutSolicitudExamenInput, Prisma.ProcesoOcupacionalUncheckedCreateWithoutSolicitudExamenInput>
   connectOrCreate?: Prisma.ProcesoOcupacionalCreateOrConnectWithoutSolicitudExamenInput
@@ -733,6 +754,7 @@ export type ProcesoOcupacionalCreateWithoutCandidatoInput = {
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutCandidatoInput = {
@@ -747,6 +769,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutCandidatoInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutCandidatoInput = {
@@ -801,6 +824,7 @@ export type ProcesoOcupacionalCreateWithoutDocumentoProcesoInput = {
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutDocumentoProcesoInput = {
@@ -815,6 +839,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutDocumentoProcesoInput = {
   CreadoEn?: Date | string
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutDocumentoProcesoInput = {
@@ -845,6 +870,7 @@ export type ProcesoOcupacionalUpdateWithoutDocumentoProcesoInput = {
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutDocumentoProcesoInput = {
@@ -859,6 +885,7 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutDocumentoProcesoInput = {
   CreadoEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalCreateWithoutEmpresaInput = {
@@ -873,6 +900,7 @@ export type ProcesoOcupacionalCreateWithoutEmpresaInput = {
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutEmpresaInput = {
@@ -887,6 +915,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutEmpresaInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutEmpresaInput = {
@@ -926,6 +955,7 @@ export type ProcesoOcupacionalCreateWithoutEstadoProcesoInput = {
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProcesoOcupacionalInput
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutEstadoProcesoInput = {
@@ -940,6 +970,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutEstadoProcesoInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutEstadoProcesoInput = {
@@ -979,6 +1010,7 @@ export type ProcesoOcupacionalCreateWithoutNotificacionInput = {
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutNotificacionInput = {
@@ -993,6 +1025,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutNotificacionInput = {
   CreadoEn?: Date | string
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutNotificacionInput = {
@@ -1023,6 +1056,7 @@ export type ProcesoOcupacionalUpdateWithoutNotificacionInput = {
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutNotificacionInput = {
@@ -1036,6 +1070,83 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutNotificacionInput = {
   CreadoPorUsuarioId?: Prisma.IntFieldUpdateOperationsInput | number
   CreadoEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
+}
+
+export type ProcesoOcupacionalCreateWithoutPerfilCargoInput = {
+  ProcesoOcupacionalId?: bigint | number
+  FechaInicio?: Date | string
+  FechaCierre?: Date | string | null
+  ObservacionAdministrativa?: string | null
+  CreadoEn?: Date | string
+  DocumentoProceso?: Prisma.DocumentoProcesoCreateNestedManyWithoutProcesoOcupacionalInput
+  Notificacion?: Prisma.NotificacionCreateNestedManyWithoutProcesoOcupacionalInput
+  Candidato: Prisma.CandidatoCreateNestedOneWithoutProcesoOcupacionalInput
+  Usuario: Prisma.UsuarioCreateNestedOneWithoutProcesoOcupacionalInput
+  Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
+  EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
+  SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+}
+
+export type ProcesoOcupacionalUncheckedCreateWithoutPerfilCargoInput = {
+  ProcesoOcupacionalId?: bigint | number
+  CandidatoId: number
+  EmpresaId: number
+  EstadoProcesoId: number
+  FechaInicio?: Date | string
+  FechaCierre?: Date | string | null
+  ObservacionAdministrativa?: string | null
+  CreadoPorUsuarioId: number
+  CreadoEn?: Date | string
+  DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+}
+
+export type ProcesoOcupacionalCreateOrConnectWithoutPerfilCargoInput = {
+  where: Prisma.ProcesoOcupacionalWhereUniqueInput
+  create: Prisma.XOR<Prisma.ProcesoOcupacionalCreateWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUncheckedCreateWithoutPerfilCargoInput>
+}
+
+export type ProcesoOcupacionalUpsertWithoutPerfilCargoInput = {
+  update: Prisma.XOR<Prisma.ProcesoOcupacionalUpdateWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUncheckedUpdateWithoutPerfilCargoInput>
+  create: Prisma.XOR<Prisma.ProcesoOcupacionalCreateWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUncheckedCreateWithoutPerfilCargoInput>
+  where?: Prisma.ProcesoOcupacionalWhereInput
+}
+
+export type ProcesoOcupacionalUpdateToOneWithWhereWithoutPerfilCargoInput = {
+  where?: Prisma.ProcesoOcupacionalWhereInput
+  data: Prisma.XOR<Prisma.ProcesoOcupacionalUpdateWithoutPerfilCargoInput, Prisma.ProcesoOcupacionalUncheckedUpdateWithoutPerfilCargoInput>
+}
+
+export type ProcesoOcupacionalUpdateWithoutPerfilCargoInput = {
+  ProcesoOcupacionalId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  FechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  FechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ObservacionAdministrativa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CreadoEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  DocumentoProceso?: Prisma.DocumentoProcesoUpdateManyWithoutProcesoOcupacionalNestedInput
+  Notificacion?: Prisma.NotificacionUpdateManyWithoutProcesoOcupacionalNestedInput
+  Candidato?: Prisma.CandidatoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
+  Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
+  Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
+  EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
+  SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+}
+
+export type ProcesoOcupacionalUncheckedUpdateWithoutPerfilCargoInput = {
+  ProcesoOcupacionalId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  CandidatoId?: Prisma.IntFieldUpdateOperationsInput | number
+  EmpresaId?: Prisma.IntFieldUpdateOperationsInput | number
+  EstadoProcesoId?: Prisma.IntFieldUpdateOperationsInput | number
+  FechaInicio?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  FechaCierre?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ObservacionAdministrativa?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CreadoPorUsuarioId?: Prisma.IntFieldUpdateOperationsInput | number
+  CreadoEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
 }
 
@@ -1051,6 +1162,7 @@ export type ProcesoOcupacionalCreateWithoutSolicitudExamenInput = {
   Usuario: Prisma.UsuarioCreateNestedOneWithoutProcesoOcupacionalInput
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutSolicitudExamenInput = {
@@ -1065,6 +1177,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutSolicitudExamenInput = {
   CreadoEn?: Date | string
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutSolicitudExamenInput = {
@@ -1095,6 +1208,7 @@ export type ProcesoOcupacionalUpdateWithoutSolicitudExamenInput = {
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutSolicitudExamenInput = {
@@ -1109,6 +1223,7 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutSolicitudExamenInput = {
   CreadoEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalCreateWithoutUsuarioInput = {
@@ -1123,6 +1238,7 @@ export type ProcesoOcupacionalCreateWithoutUsuarioInput = {
   Empresa: Prisma.EmpresaCreateNestedOneWithoutProcesoOcupacionalInput
   EstadoProceso: Prisma.EstadoProcesoCreateNestedOneWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalUncheckedCreateWithoutUsuarioInput = {
@@ -1137,6 +1253,7 @@ export type ProcesoOcupacionalUncheckedCreateWithoutUsuarioInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   Notificacion?: Prisma.NotificacionUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedCreateNestedManyWithoutProcesoOcupacionalInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedCreateNestedOneWithoutProcesoOcupacionalInput
 }
 
 export type ProcesoOcupacionalCreateOrConnectWithoutUsuarioInput = {
@@ -1186,6 +1303,7 @@ export type ProcesoOcupacionalUpdateWithoutCandidatoInput = {
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutCandidatoInput = {
@@ -1200,6 +1318,7 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutCandidatoInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateManyWithoutCandidatoInput = {
@@ -1235,6 +1354,7 @@ export type ProcesoOcupacionalUpdateWithoutEmpresaInput = {
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutEmpresaInput = {
@@ -1249,6 +1369,7 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutEmpresaInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateManyWithoutEmpresaInput = {
@@ -1284,6 +1405,7 @@ export type ProcesoOcupacionalUpdateWithoutEstadoProcesoInput = {
   Usuario?: Prisma.UsuarioUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutEstadoProcesoInput = {
@@ -1298,6 +1420,7 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutEstadoProcesoInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateManyWithoutEstadoProcesoInput = {
@@ -1333,6 +1456,7 @@ export type ProcesoOcupacionalUpdateWithoutUsuarioInput = {
   Empresa?: Prisma.EmpresaUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   EstadoProceso?: Prisma.EstadoProcesoUpdateOneRequiredWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateWithoutUsuarioInput = {
@@ -1347,6 +1471,7 @@ export type ProcesoOcupacionalUncheckedUpdateWithoutUsuarioInput = {
   DocumentoProceso?: Prisma.DocumentoProcesoUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   Notificacion?: Prisma.NotificacionUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
   SolicitudExamen?: Prisma.SolicitudExamenUncheckedUpdateManyWithoutProcesoOcupacionalNestedInput
+  PerfilCargo?: Prisma.PerfilCargoUncheckedUpdateOneWithoutProcesoOcupacionalNestedInput
 }
 
 export type ProcesoOcupacionalUncheckedUpdateManyWithoutUsuarioInput = {
@@ -1426,6 +1551,7 @@ export type ProcesoOcupacionalSelect<ExtArgs extends runtime.Types.Extensions.In
   Empresa?: boolean | Prisma.EmpresaDefaultArgs<ExtArgs>
   EstadoProceso?: boolean | Prisma.EstadoProcesoDefaultArgs<ExtArgs>
   SolicitudExamen?: boolean | Prisma.ProcesoOcupacional$SolicitudExamenArgs<ExtArgs>
+  PerfilCargo?: boolean | Prisma.ProcesoOcupacional$PerfilCargoArgs<ExtArgs>
   _count?: boolean | Prisma.ProcesoOcupacionalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["procesoOcupacional"]>
 
@@ -1452,6 +1578,7 @@ export type ProcesoOcupacionalInclude<ExtArgs extends runtime.Types.Extensions.I
   Empresa?: boolean | Prisma.EmpresaDefaultArgs<ExtArgs>
   EstadoProceso?: boolean | Prisma.EstadoProcesoDefaultArgs<ExtArgs>
   SolicitudExamen?: boolean | Prisma.ProcesoOcupacional$SolicitudExamenArgs<ExtArgs>
+  PerfilCargo?: boolean | Prisma.ProcesoOcupacional$PerfilCargoArgs<ExtArgs>
   _count?: boolean | Prisma.ProcesoOcupacionalCountOutputTypeDefaultArgs<ExtArgs>
 }
 
@@ -1465,6 +1592,7 @@ export type $ProcesoOcupacionalPayload<ExtArgs extends runtime.Types.Extensions.
     Empresa: Prisma.$EmpresaPayload<ExtArgs>
     EstadoProceso: Prisma.$EstadoProcesoPayload<ExtArgs>
     SolicitudExamen: Prisma.$SolicitudExamenPayload<ExtArgs>[]
+    PerfilCargo: Prisma.$PerfilCargoPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     ProcesoOcupacionalId: bigint
@@ -1823,6 +1951,7 @@ export interface Prisma__ProcesoOcupacionalClient<T, Null = never, ExtArgs exten
   Empresa<T extends Prisma.EmpresaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EmpresaDefaultArgs<ExtArgs>>): Prisma.Prisma__EmpresaClient<runtime.Types.Result.GetResult<Prisma.$EmpresaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   EstadoProceso<T extends Prisma.EstadoProcesoDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EstadoProcesoDefaultArgs<ExtArgs>>): Prisma.Prisma__EstadoProcesoClient<runtime.Types.Result.GetResult<Prisma.$EstadoProcesoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   SolicitudExamen<T extends Prisma.ProcesoOcupacional$SolicitudExamenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcesoOcupacional$SolicitudExamenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SolicitudExamenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  PerfilCargo<T extends Prisma.ProcesoOcupacional$PerfilCargoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProcesoOcupacional$PerfilCargoArgs<ExtArgs>>): Prisma.Prisma__PerfilCargoClient<runtime.Types.Result.GetResult<Prisma.$PerfilCargoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2277,6 +2406,25 @@ export type ProcesoOcupacional$SolicitudExamenArgs<ExtArgs extends runtime.Types
   take?: number
   skip?: number
   distinct?: Prisma.SolicitudExamenScalarFieldEnum | Prisma.SolicitudExamenScalarFieldEnum[]
+}
+
+/**
+ * ProcesoOcupacional.PerfilCargo
+ */
+export type ProcesoOcupacional$PerfilCargoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the PerfilCargo
+   */
+  select?: Prisma.PerfilCargoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the PerfilCargo
+   */
+  omit?: Prisma.PerfilCargoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.PerfilCargoInclude<ExtArgs> | null
+  where?: Prisma.PerfilCargoWhereInput
 }
 
 /**

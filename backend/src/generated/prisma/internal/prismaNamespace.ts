@@ -411,10 +411,12 @@ export const ModelName = {
   EstadoProceso: 'EstadoProceso',
   EstadoSolicitud: 'EstadoSolicitud',
   EvaluacionOcupacional: 'EvaluacionOcupacional',
+  MedicamentoReportado: 'MedicamentoReportado',
   IntentoNotificacion: 'IntentoNotificacion',
   Notificacion: 'Notificacion',
   Permiso: 'Permiso',
   ProcesoOcupacional: 'ProcesoOcupacional',
+  PerfilCargo: 'PerfilCargo',
   Profesional: 'Profesional',
   Restriccion: 'Restriccion',
   Rol: 'Rol',
@@ -441,7 +443,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "alertaSeguridad" | "auditoria" | "candidato" | "cita" | "clinica" | "conceptoOcupacional" | "disponibilidad" | "documentoProceso" | "empresa" | "estadoCita" | "estadoDocumento" | "estadoProceso" | "estadoSolicitud" | "evaluacionOcupacional" | "intentoNotificacion" | "notificacion" | "permiso" | "procesoOcupacional" | "profesional" | "restriccion" | "rol" | "rolPermiso" | "solicitudExamen" | "sysdiagrams" | "tipoDocumento" | "tipoExamen" | "tokenRecuperacion" | "usuario" | "usuarioRol"
+    modelProps: "alertaSeguridad" | "auditoria" | "candidato" | "cita" | "clinica" | "conceptoOcupacional" | "disponibilidad" | "documentoProceso" | "empresa" | "estadoCita" | "estadoDocumento" | "estadoProceso" | "estadoSolicitud" | "evaluacionOcupacional" | "medicamentoReportado" | "intentoNotificacion" | "notificacion" | "permiso" | "procesoOcupacional" | "perfilCargo" | "profesional" | "restriccion" | "rol" | "rolPermiso" | "solicitudExamen" | "sysdiagrams" | "tipoDocumento" | "tipoExamen" | "tokenRecuperacion" | "usuario" | "usuarioRol"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1369,6 +1371,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MedicamentoReportado: {
+      payload: Prisma.$MedicamentoReportadoPayload<ExtArgs>
+      fields: Prisma.MedicamentoReportadoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MedicamentoReportadoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MedicamentoReportadoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>
+        }
+        findFirst: {
+          args: Prisma.MedicamentoReportadoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MedicamentoReportadoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>
+        }
+        findMany: {
+          args: Prisma.MedicamentoReportadoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>[]
+        }
+        create: {
+          args: Prisma.MedicamentoReportadoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>
+        }
+        createMany: {
+          args: Prisma.MedicamentoReportadoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.MedicamentoReportadoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>
+        }
+        update: {
+          args: Prisma.MedicamentoReportadoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>
+        }
+        deleteMany: {
+          args: Prisma.MedicamentoReportadoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MedicamentoReportadoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.MedicamentoReportadoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MedicamentoReportadoPayload>
+        }
+        aggregate: {
+          args: Prisma.MedicamentoReportadoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMedicamentoReportado>
+        }
+        groupBy: {
+          args: Prisma.MedicamentoReportadoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MedicamentoReportadoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MedicamentoReportadoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MedicamentoReportadoCountAggregateOutputType> | number
+        }
+      }
+    }
     IntentoNotificacion: {
       payload: Prisma.$IntentoNotificacionPayload<ExtArgs>
       fields: Prisma.IntentoNotificacionFieldRefs
@@ -1630,6 +1698,72 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.ProcesoOcupacionalCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.ProcesoOcupacionalCountAggregateOutputType> | number
+        }
+      }
+    }
+    PerfilCargo: {
+      payload: Prisma.$PerfilCargoPayload<ExtArgs>
+      fields: Prisma.PerfilCargoFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PerfilCargoFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PerfilCargoFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>
+        }
+        findFirst: {
+          args: Prisma.PerfilCargoFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PerfilCargoFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>
+        }
+        findMany: {
+          args: Prisma.PerfilCargoFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>[]
+        }
+        create: {
+          args: Prisma.PerfilCargoCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>
+        }
+        createMany: {
+          args: Prisma.PerfilCargoCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        delete: {
+          args: Prisma.PerfilCargoDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>
+        }
+        update: {
+          args: Prisma.PerfilCargoUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>
+        }
+        deleteMany: {
+          args: Prisma.PerfilCargoDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PerfilCargoUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        upsert: {
+          args: Prisma.PerfilCargoUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PerfilCargoPayload>
+        }
+        aggregate: {
+          args: Prisma.PerfilCargoAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePerfilCargo>
+        }
+        groupBy: {
+          args: Prisma.PerfilCargoGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PerfilCargoGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PerfilCargoCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PerfilCargoCountAggregateOutputType> | number
         }
       }
     }
@@ -2567,11 +2701,24 @@ export const EvaluacionOcupacionalScalarFieldEnum = {
   Hallazgos: 'Hallazgos',
   ObservacionClinica: 'ObservacionClinica',
   CertificadoUbicacionSegura: 'CertificadoUbicacionSegura',
+  TomaMedicamentos: 'TomaMedicamentos',
+  MedicamentosRevisados: 'MedicamentosRevisados',
   EvaluadaEn: 'EvaluadaEn',
   CerradaEn: 'CerradaEn'
 } as const
 
 export type EvaluacionOcupacionalScalarFieldEnum = (typeof EvaluacionOcupacionalScalarFieldEnum)[keyof typeof EvaluacionOcupacionalScalarFieldEnum]
+
+
+export const MedicamentoReportadoScalarFieldEnum = {
+  MedicamentoReportadoId: 'MedicamentoReportadoId',
+  EvaluacionOcupacionalId: 'EvaluacionOcupacionalId',
+  Nombre: 'Nombre',
+  Dosis: 'Dosis',
+  Frecuencia: 'Frecuencia'
+} as const
+
+export type MedicamentoReportadoScalarFieldEnum = (typeof MedicamentoReportadoScalarFieldEnum)[keyof typeof MedicamentoReportadoScalarFieldEnum]
 
 
 export const IntentoNotificacionScalarFieldEnum = {
@@ -2627,6 +2774,28 @@ export const ProcesoOcupacionalScalarFieldEnum = {
 } as const
 
 export type ProcesoOcupacionalScalarFieldEnum = (typeof ProcesoOcupacionalScalarFieldEnum)[keyof typeof ProcesoOcupacionalScalarFieldEnum]
+
+
+export const PerfilCargoScalarFieldEnum = {
+  PerfilCargoId: 'PerfilCargoId',
+  ProcesoOcupacionalId: 'ProcesoOcupacionalId',
+  NombreCargo: 'NombreCargo',
+  FuncionesResponsabilidades: 'FuncionesResponsabilidades',
+  HabilidadesCompetencias: 'HabilidadesCompetencias',
+  RequisitosFisicosMentales: 'RequisitosFisicosMentales',
+  RiesgosLaborales: 'RiesgosLaborales',
+  MedidasPreventivas: 'MedidasPreventivas',
+  IndicadoresEpidemiologicos: 'IndicadoresEpidemiologicos',
+  MatrizPeligrosRiesgos: 'MatrizPeligrosRiesgos',
+  EstudiosTecnicos: 'EstudiosTecnicos',
+  IndicadoresBiologicos: 'IndicadoresBiologicos',
+  RegistradoPorUsuarioId: 'RegistradoPorUsuarioId',
+  RegistradoEn: 'RegistradoEn',
+  RecibidoPorProfesionalId: 'RecibidoPorProfesionalId',
+  RecibidoEn: 'RecibidoEn'
+} as const
+
+export type PerfilCargoScalarFieldEnum = (typeof PerfilCargoScalarFieldEnum)[keyof typeof PerfilCargoScalarFieldEnum]
 
 
 export const ProfesionalScalarFieldEnum = {
@@ -2989,10 +3158,12 @@ export type GlobalOmitConfig = {
   estadoProceso?: Prisma.EstadoProcesoOmit
   estadoSolicitud?: Prisma.EstadoSolicitudOmit
   evaluacionOcupacional?: Prisma.EvaluacionOcupacionalOmit
+  medicamentoReportado?: Prisma.MedicamentoReportadoOmit
   intentoNotificacion?: Prisma.IntentoNotificacionOmit
   notificacion?: Prisma.NotificacionOmit
   permiso?: Prisma.PermisoOmit
   procesoOcupacional?: Prisma.ProcesoOcupacionalOmit
+  perfilCargo?: Prisma.PerfilCargoOmit
   profesional?: Prisma.ProfesionalOmit
   restriccion?: Prisma.RestriccionOmit
   rol?: Prisma.RolOmit

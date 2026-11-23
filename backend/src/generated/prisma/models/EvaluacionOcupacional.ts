@@ -49,6 +49,8 @@ export type EvaluacionOcupacionalMinAggregateOutputType = {
   Hallazgos: string | null
   ObservacionClinica: string | null
   CertificadoUbicacionSegura: string | null
+  TomaMedicamentos: boolean | null
+  MedicamentosRevisados: boolean | null
   EvaluadaEn: Date | null
   CerradaEn: Date | null
 }
@@ -62,6 +64,8 @@ export type EvaluacionOcupacionalMaxAggregateOutputType = {
   Hallazgos: string | null
   ObservacionClinica: string | null
   CertificadoUbicacionSegura: string | null
+  TomaMedicamentos: boolean | null
+  MedicamentosRevisados: boolean | null
   EvaluadaEn: Date | null
   CerradaEn: Date | null
 }
@@ -75,6 +79,8 @@ export type EvaluacionOcupacionalCountAggregateOutputType = {
   Hallazgos: number
   ObservacionClinica: number
   CertificadoUbicacionSegura: number
+  TomaMedicamentos: number
+  MedicamentosRevisados: number
   EvaluadaEn: number
   CerradaEn: number
   _all: number
@@ -104,6 +110,8 @@ export type EvaluacionOcupacionalMinAggregateInputType = {
   Hallazgos?: true
   ObservacionClinica?: true
   CertificadoUbicacionSegura?: true
+  TomaMedicamentos?: true
+  MedicamentosRevisados?: true
   EvaluadaEn?: true
   CerradaEn?: true
 }
@@ -117,6 +125,8 @@ export type EvaluacionOcupacionalMaxAggregateInputType = {
   Hallazgos?: true
   ObservacionClinica?: true
   CertificadoUbicacionSegura?: true
+  TomaMedicamentos?: true
+  MedicamentosRevisados?: true
   EvaluadaEn?: true
   CerradaEn?: true
 }
@@ -130,6 +140,8 @@ export type EvaluacionOcupacionalCountAggregateInputType = {
   Hallazgos?: true
   ObservacionClinica?: true
   CertificadoUbicacionSegura?: true
+  TomaMedicamentos?: true
+  MedicamentosRevisados?: true
   EvaluadaEn?: true
   CerradaEn?: true
   _all?: true
@@ -230,6 +242,8 @@ export type EvaluacionOcupacionalGroupByOutputType = {
   Hallazgos: string | null
   ObservacionClinica: string | null
   CertificadoUbicacionSegura: string | null
+  TomaMedicamentos: boolean | null
+  MedicamentosRevisados: boolean | null
   EvaluadaEn: Date
   CerradaEn: Date | null
   _count: EvaluacionOcupacionalCountAggregateOutputType | null
@@ -266,11 +280,14 @@ export type EvaluacionOcupacionalWhereInput = {
   Hallazgos?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
   ObservacionClinica?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
   CertificadoUbicacionSegura?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
+  TomaMedicamentos?: Prisma.BoolNullableFilter<"EvaluacionOcupacional"> | boolean | null
+  MedicamentosRevisados?: Prisma.BoolNullableFilter<"EvaluacionOcupacional"> | boolean | null
   EvaluadaEn?: Prisma.DateTimeFilter<"EvaluacionOcupacional"> | Date | string
   CerradaEn?: Prisma.DateTimeNullableFilter<"EvaluacionOcupacional"> | Date | string | null
   Cita?: Prisma.XOR<Prisma.CitaScalarRelationFilter, Prisma.CitaWhereInput>
   ConceptoOcupacional?: Prisma.XOR<Prisma.ConceptoOcupacionalNullableScalarRelationFilter, Prisma.ConceptoOcupacionalWhereInput> | null
   Profesional?: Prisma.XOR<Prisma.ProfesionalScalarRelationFilter, Prisma.ProfesionalWhereInput>
+  MedicamentoReportado?: Prisma.MedicamentoReportadoListRelationFilter
   Restriccion?: Prisma.RestriccionListRelationFilter
 }
 
@@ -283,11 +300,14 @@ export type EvaluacionOcupacionalOrderByWithRelationInput = {
   Hallazgos?: Prisma.SortOrderInput | Prisma.SortOrder
   ObservacionClinica?: Prisma.SortOrderInput | Prisma.SortOrder
   CertificadoUbicacionSegura?: Prisma.SortOrderInput | Prisma.SortOrder
+  TomaMedicamentos?: Prisma.SortOrderInput | Prisma.SortOrder
+  MedicamentosRevisados?: Prisma.SortOrderInput | Prisma.SortOrder
   EvaluadaEn?: Prisma.SortOrder
   CerradaEn?: Prisma.SortOrderInput | Prisma.SortOrder
   Cita?: Prisma.CitaOrderByWithRelationInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalOrderByWithRelationInput
   Profesional?: Prisma.ProfesionalOrderByWithRelationInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoOrderByRelationAggregateInput
   Restriccion?: Prisma.RestriccionOrderByRelationAggregateInput
 }
 
@@ -303,11 +323,14 @@ export type EvaluacionOcupacionalWhereUniqueInput = Prisma.AtLeast<{
   Hallazgos?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
   ObservacionClinica?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
   CertificadoUbicacionSegura?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
+  TomaMedicamentos?: Prisma.BoolNullableFilter<"EvaluacionOcupacional"> | boolean | null
+  MedicamentosRevisados?: Prisma.BoolNullableFilter<"EvaluacionOcupacional"> | boolean | null
   EvaluadaEn?: Prisma.DateTimeFilter<"EvaluacionOcupacional"> | Date | string
   CerradaEn?: Prisma.DateTimeNullableFilter<"EvaluacionOcupacional"> | Date | string | null
   Cita?: Prisma.XOR<Prisma.CitaScalarRelationFilter, Prisma.CitaWhereInput>
   ConceptoOcupacional?: Prisma.XOR<Prisma.ConceptoOcupacionalNullableScalarRelationFilter, Prisma.ConceptoOcupacionalWhereInput> | null
   Profesional?: Prisma.XOR<Prisma.ProfesionalScalarRelationFilter, Prisma.ProfesionalWhereInput>
+  MedicamentoReportado?: Prisma.MedicamentoReportadoListRelationFilter
   Restriccion?: Prisma.RestriccionListRelationFilter
 }, "EvaluacionOcupacionalId" | "CitaId">
 
@@ -320,6 +343,8 @@ export type EvaluacionOcupacionalOrderByWithAggregationInput = {
   Hallazgos?: Prisma.SortOrderInput | Prisma.SortOrder
   ObservacionClinica?: Prisma.SortOrderInput | Prisma.SortOrder
   CertificadoUbicacionSegura?: Prisma.SortOrderInput | Prisma.SortOrder
+  TomaMedicamentos?: Prisma.SortOrderInput | Prisma.SortOrder
+  MedicamentosRevisados?: Prisma.SortOrderInput | Prisma.SortOrder
   EvaluadaEn?: Prisma.SortOrder
   CerradaEn?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.EvaluacionOcupacionalCountOrderByAggregateInput
@@ -341,6 +366,8 @@ export type EvaluacionOcupacionalScalarWhereWithAggregatesInput = {
   Hallazgos?: Prisma.StringNullableWithAggregatesFilter<"EvaluacionOcupacional"> | string | null
   ObservacionClinica?: Prisma.StringNullableWithAggregatesFilter<"EvaluacionOcupacional"> | string | null
   CertificadoUbicacionSegura?: Prisma.StringNullableWithAggregatesFilter<"EvaluacionOcupacional"> | string | null
+  TomaMedicamentos?: Prisma.BoolNullableWithAggregatesFilter<"EvaluacionOcupacional"> | boolean | null
+  MedicamentosRevisados?: Prisma.BoolNullableWithAggregatesFilter<"EvaluacionOcupacional"> | boolean | null
   EvaluadaEn?: Prisma.DateTimeWithAggregatesFilter<"EvaluacionOcupacional"> | Date | string
   CerradaEn?: Prisma.DateTimeNullableWithAggregatesFilter<"EvaluacionOcupacional"> | Date | string | null
 }
@@ -351,11 +378,14 @@ export type EvaluacionOcupacionalCreateInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
   Cita: Prisma.CitaCreateNestedOneWithoutEvaluacionOcupacionalInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalCreateNestedOneWithoutEvaluacionOcupacionalInput
   Profesional: Prisma.ProfesionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -368,8 +398,11 @@ export type EvaluacionOcupacionalUncheckedCreateInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -379,11 +412,14 @@ export type EvaluacionOcupacionalUpdateInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Cita?: Prisma.CitaUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalUpdateOneWithoutEvaluacionOcupacionalNestedInput
   Profesional?: Prisma.ProfesionalUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -396,8 +432,11 @@ export type EvaluacionOcupacionalUncheckedUpdateInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -409,6 +448,8 @@ export type EvaluacionOcupacionalCreateManyInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
 }
@@ -419,6 +460,8 @@ export type EvaluacionOcupacionalUpdateManyMutationInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -432,6 +475,8 @@ export type EvaluacionOcupacionalUncheckedUpdateManyInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -460,6 +505,8 @@ export type EvaluacionOcupacionalCountOrderByAggregateInput = {
   Hallazgos?: Prisma.SortOrder
   ObservacionClinica?: Prisma.SortOrder
   CertificadoUbicacionSegura?: Prisma.SortOrder
+  TomaMedicamentos?: Prisma.SortOrder
+  MedicamentosRevisados?: Prisma.SortOrder
   EvaluadaEn?: Prisma.SortOrder
   CerradaEn?: Prisma.SortOrder
 }
@@ -480,6 +527,8 @@ export type EvaluacionOcupacionalMaxOrderByAggregateInput = {
   Hallazgos?: Prisma.SortOrder
   ObservacionClinica?: Prisma.SortOrder
   CertificadoUbicacionSegura?: Prisma.SortOrder
+  TomaMedicamentos?: Prisma.SortOrder
+  MedicamentosRevisados?: Prisma.SortOrder
   EvaluadaEn?: Prisma.SortOrder
   CerradaEn?: Prisma.SortOrder
 }
@@ -493,6 +542,8 @@ export type EvaluacionOcupacionalMinOrderByAggregateInput = {
   Hallazgos?: Prisma.SortOrder
   ObservacionClinica?: Prisma.SortOrder
   CertificadoUbicacionSegura?: Prisma.SortOrder
+  TomaMedicamentos?: Prisma.SortOrder
+  MedicamentosRevisados?: Prisma.SortOrder
   EvaluadaEn?: Prisma.SortOrder
   CerradaEn?: Prisma.SortOrder
 }
@@ -583,6 +634,24 @@ export type EvaluacionOcupacionalUncheckedUpdateManyWithoutConceptoOcupacionalNe
   deleteMany?: Prisma.EvaluacionOcupacionalScalarWhereInput | Prisma.EvaluacionOcupacionalScalarWhereInput[]
 }
 
+export type NullableBoolFieldUpdateOperationsInput = {
+  set?: boolean | null
+}
+
+export type EvaluacionOcupacionalCreateNestedOneWithoutMedicamentoReportadoInput = {
+  create?: Prisma.XOR<Prisma.EvaluacionOcupacionalCreateWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUncheckedCreateWithoutMedicamentoReportadoInput>
+  connectOrCreate?: Prisma.EvaluacionOcupacionalCreateOrConnectWithoutMedicamentoReportadoInput
+  connect?: Prisma.EvaluacionOcupacionalWhereUniqueInput
+}
+
+export type EvaluacionOcupacionalUpdateOneRequiredWithoutMedicamentoReportadoNestedInput = {
+  create?: Prisma.XOR<Prisma.EvaluacionOcupacionalCreateWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUncheckedCreateWithoutMedicamentoReportadoInput>
+  connectOrCreate?: Prisma.EvaluacionOcupacionalCreateOrConnectWithoutMedicamentoReportadoInput
+  upsert?: Prisma.EvaluacionOcupacionalUpsertWithoutMedicamentoReportadoInput
+  connect?: Prisma.EvaluacionOcupacionalWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.EvaluacionOcupacionalUpdateToOneWithWhereWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUpdateWithoutMedicamentoReportadoInput>, Prisma.EvaluacionOcupacionalUncheckedUpdateWithoutMedicamentoReportadoInput>
+}
+
 export type EvaluacionOcupacionalCreateNestedManyWithoutProfesionalInput = {
   create?: Prisma.XOR<Prisma.EvaluacionOcupacionalCreateWithoutProfesionalInput, Prisma.EvaluacionOcupacionalUncheckedCreateWithoutProfesionalInput> | Prisma.EvaluacionOcupacionalCreateWithoutProfesionalInput[] | Prisma.EvaluacionOcupacionalUncheckedCreateWithoutProfesionalInput[]
   connectOrCreate?: Prisma.EvaluacionOcupacionalCreateOrConnectWithoutProfesionalInput | Prisma.EvaluacionOcupacionalCreateOrConnectWithoutProfesionalInput[]
@@ -645,10 +714,13 @@ export type EvaluacionOcupacionalCreateWithoutCitaInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalCreateNestedOneWithoutEvaluacionOcupacionalInput
   Profesional: Prisma.ProfesionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -660,8 +732,11 @@ export type EvaluacionOcupacionalUncheckedCreateWithoutCitaInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -687,10 +762,13 @@ export type EvaluacionOcupacionalUpdateWithoutCitaInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalUpdateOneWithoutEvaluacionOcupacionalNestedInput
   Profesional?: Prisma.ProfesionalUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -702,8 +780,11 @@ export type EvaluacionOcupacionalUncheckedUpdateWithoutCitaInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -713,10 +794,13 @@ export type EvaluacionOcupacionalCreateWithoutConceptoOcupacionalInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
   Cita: Prisma.CitaCreateNestedOneWithoutEvaluacionOcupacionalInput
   Profesional: Prisma.ProfesionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -728,8 +812,11 @@ export type EvaluacionOcupacionalUncheckedCreateWithoutConceptoOcupacionalInput 
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -770,8 +857,90 @@ export type EvaluacionOcupacionalScalarWhereInput = {
   Hallazgos?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
   ObservacionClinica?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
   CertificadoUbicacionSegura?: Prisma.StringNullableFilter<"EvaluacionOcupacional"> | string | null
+  TomaMedicamentos?: Prisma.BoolNullableFilter<"EvaluacionOcupacional"> | boolean | null
+  MedicamentosRevisados?: Prisma.BoolNullableFilter<"EvaluacionOcupacional"> | boolean | null
   EvaluadaEn?: Prisma.DateTimeFilter<"EvaluacionOcupacional"> | Date | string
   CerradaEn?: Prisma.DateTimeNullableFilter<"EvaluacionOcupacional"> | Date | string | null
+}
+
+export type EvaluacionOcupacionalCreateWithoutMedicamentoReportadoInput = {
+  EvaluacionOcupacionalId?: bigint | number
+  ResultadoResumen?: string | null
+  Hallazgos?: string | null
+  ObservacionClinica?: string | null
+  CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
+  EvaluadaEn?: Date | string
+  CerradaEn?: Date | string | null
+  Cita: Prisma.CitaCreateNestedOneWithoutEvaluacionOcupacionalInput
+  ConceptoOcupacional?: Prisma.ConceptoOcupacionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  Profesional: Prisma.ProfesionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  Restriccion?: Prisma.RestriccionCreateNestedManyWithoutEvaluacionOcupacionalInput
+}
+
+export type EvaluacionOcupacionalUncheckedCreateWithoutMedicamentoReportadoInput = {
+  EvaluacionOcupacionalId?: bigint | number
+  CitaId: bigint | number
+  ProfesionalId: number
+  ConceptoOcupacionalId?: number | null
+  ResultadoResumen?: string | null
+  Hallazgos?: string | null
+  ObservacionClinica?: string | null
+  CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
+  EvaluadaEn?: Date | string
+  CerradaEn?: Date | string | null
+  Restriccion?: Prisma.RestriccionUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
+}
+
+export type EvaluacionOcupacionalCreateOrConnectWithoutMedicamentoReportadoInput = {
+  where: Prisma.EvaluacionOcupacionalWhereUniqueInput
+  create: Prisma.XOR<Prisma.EvaluacionOcupacionalCreateWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUncheckedCreateWithoutMedicamentoReportadoInput>
+}
+
+export type EvaluacionOcupacionalUpsertWithoutMedicamentoReportadoInput = {
+  update: Prisma.XOR<Prisma.EvaluacionOcupacionalUpdateWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUncheckedUpdateWithoutMedicamentoReportadoInput>
+  create: Prisma.XOR<Prisma.EvaluacionOcupacionalCreateWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUncheckedCreateWithoutMedicamentoReportadoInput>
+  where?: Prisma.EvaluacionOcupacionalWhereInput
+}
+
+export type EvaluacionOcupacionalUpdateToOneWithWhereWithoutMedicamentoReportadoInput = {
+  where?: Prisma.EvaluacionOcupacionalWhereInput
+  data: Prisma.XOR<Prisma.EvaluacionOcupacionalUpdateWithoutMedicamentoReportadoInput, Prisma.EvaluacionOcupacionalUncheckedUpdateWithoutMedicamentoReportadoInput>
+}
+
+export type EvaluacionOcupacionalUpdateWithoutMedicamentoReportadoInput = {
+  EvaluacionOcupacionalId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  ResultadoResumen?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  Cita?: Prisma.CitaUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
+  ConceptoOcupacional?: Prisma.ConceptoOcupacionalUpdateOneWithoutEvaluacionOcupacionalNestedInput
+  Profesional?: Prisma.ProfesionalUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
+  Restriccion?: Prisma.RestriccionUpdateManyWithoutEvaluacionOcupacionalNestedInput
+}
+
+export type EvaluacionOcupacionalUncheckedUpdateWithoutMedicamentoReportadoInput = {
+  EvaluacionOcupacionalId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  CitaId?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  ProfesionalId?: Prisma.IntFieldUpdateOperationsInput | number
+  ConceptoOcupacionalId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ResultadoResumen?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  Restriccion?: Prisma.RestriccionUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
 export type EvaluacionOcupacionalCreateWithoutProfesionalInput = {
@@ -780,10 +949,13 @@ export type EvaluacionOcupacionalCreateWithoutProfesionalInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
   Cita: Prisma.CitaCreateNestedOneWithoutEvaluacionOcupacionalInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -795,8 +967,11 @@ export type EvaluacionOcupacionalUncheckedCreateWithoutProfesionalInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
   Restriccion?: Prisma.RestriccionUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
@@ -831,11 +1006,14 @@ export type EvaluacionOcupacionalCreateWithoutRestriccionInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
   Cita: Prisma.CitaCreateNestedOneWithoutEvaluacionOcupacionalInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalCreateNestedOneWithoutEvaluacionOcupacionalInput
   Profesional: Prisma.ProfesionalCreateNestedOneWithoutEvaluacionOcupacionalInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
 export type EvaluacionOcupacionalUncheckedCreateWithoutRestriccionInput = {
@@ -847,8 +1025,11 @@ export type EvaluacionOcupacionalUncheckedCreateWithoutRestriccionInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedCreateNestedManyWithoutEvaluacionOcupacionalInput
 }
 
 export type EvaluacionOcupacionalCreateOrConnectWithoutRestriccionInput = {
@@ -873,11 +1054,14 @@ export type EvaluacionOcupacionalUpdateWithoutRestriccionInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Cita?: Prisma.CitaUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalUpdateOneWithoutEvaluacionOcupacionalNestedInput
   Profesional?: Prisma.ProfesionalUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
 export type EvaluacionOcupacionalUncheckedUpdateWithoutRestriccionInput = {
@@ -889,8 +1073,11 @@ export type EvaluacionOcupacionalUncheckedUpdateWithoutRestriccionInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
 export type EvaluacionOcupacionalCreateManyConceptoOcupacionalInput = {
@@ -900,6 +1087,8 @@ export type EvaluacionOcupacionalCreateManyConceptoOcupacionalInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
 }
@@ -910,10 +1099,13 @@ export type EvaluacionOcupacionalUpdateWithoutConceptoOcupacionalInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Cita?: Prisma.CitaUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
   Profesional?: Prisma.ProfesionalUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -925,8 +1117,11 @@ export type EvaluacionOcupacionalUncheckedUpdateWithoutConceptoOcupacionalInput 
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -938,6 +1133,8 @@ export type EvaluacionOcupacionalUncheckedUpdateManyWithoutConceptoOcupacionalIn
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -949,6 +1146,8 @@ export type EvaluacionOcupacionalCreateManyProfesionalInput = {
   Hallazgos?: string | null
   ObservacionClinica?: string | null
   CertificadoUbicacionSegura?: string | null
+  TomaMedicamentos?: boolean | null
+  MedicamentosRevisados?: boolean | null
   EvaluadaEn?: Date | string
   CerradaEn?: Date | string | null
 }
@@ -959,10 +1158,13 @@ export type EvaluacionOcupacionalUpdateWithoutProfesionalInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Cita?: Prisma.CitaUpdateOneRequiredWithoutEvaluacionOcupacionalNestedInput
   ConceptoOcupacional?: Prisma.ConceptoOcupacionalUpdateOneWithoutEvaluacionOcupacionalNestedInput
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -974,8 +1176,11 @@ export type EvaluacionOcupacionalUncheckedUpdateWithoutProfesionalInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  MedicamentoReportado?: Prisma.MedicamentoReportadoUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
   Restriccion?: Prisma.RestriccionUncheckedUpdateManyWithoutEvaluacionOcupacionalNestedInput
 }
 
@@ -987,6 +1192,8 @@ export type EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalInput = {
   Hallazgos?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   ObservacionClinica?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   CertificadoUbicacionSegura?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  TomaMedicamentos?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
+  MedicamentosRevisados?: Prisma.NullableBoolFieldUpdateOperationsInput | boolean | null
   EvaluadaEn?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   CerradaEn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
@@ -997,10 +1204,12 @@ export type EvaluacionOcupacionalUncheckedUpdateManyWithoutProfesionalInput = {
  */
 
 export type EvaluacionOcupacionalCountOutputType = {
+  MedicamentoReportado: number
   Restriccion: number
 }
 
 export type EvaluacionOcupacionalCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  MedicamentoReportado?: boolean | EvaluacionOcupacionalCountOutputTypeCountMedicamentoReportadoArgs
   Restriccion?: boolean | EvaluacionOcupacionalCountOutputTypeCountRestriccionArgs
 }
 
@@ -1012,6 +1221,13 @@ export type EvaluacionOcupacionalCountOutputTypeDefaultArgs<ExtArgs extends runt
    * Select specific fields to fetch from the EvaluacionOcupacionalCountOutputType
    */
   select?: Prisma.EvaluacionOcupacionalCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * EvaluacionOcupacionalCountOutputType without action
+ */
+export type EvaluacionOcupacionalCountOutputTypeCountMedicamentoReportadoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MedicamentoReportadoWhereInput
 }
 
 /**
@@ -1031,11 +1247,14 @@ export type EvaluacionOcupacionalSelect<ExtArgs extends runtime.Types.Extensions
   Hallazgos?: boolean
   ObservacionClinica?: boolean
   CertificadoUbicacionSegura?: boolean
+  TomaMedicamentos?: boolean
+  MedicamentosRevisados?: boolean
   EvaluadaEn?: boolean
   CerradaEn?: boolean
   Cita?: boolean | Prisma.CitaDefaultArgs<ExtArgs>
   ConceptoOcupacional?: boolean | Prisma.EvaluacionOcupacional$ConceptoOcupacionalArgs<ExtArgs>
   Profesional?: boolean | Prisma.ProfesionalDefaultArgs<ExtArgs>
+  MedicamentoReportado?: boolean | Prisma.EvaluacionOcupacional$MedicamentoReportadoArgs<ExtArgs>
   Restriccion?: boolean | Prisma.EvaluacionOcupacional$RestriccionArgs<ExtArgs>
   _count?: boolean | Prisma.EvaluacionOcupacionalCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["evaluacionOcupacional"]>
@@ -1051,15 +1270,18 @@ export type EvaluacionOcupacionalSelectScalar = {
   Hallazgos?: boolean
   ObservacionClinica?: boolean
   CertificadoUbicacionSegura?: boolean
+  TomaMedicamentos?: boolean
+  MedicamentosRevisados?: boolean
   EvaluadaEn?: boolean
   CerradaEn?: boolean
 }
 
-export type EvaluacionOcupacionalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"EvaluacionOcupacionalId" | "CitaId" | "ProfesionalId" | "ConceptoOcupacionalId" | "ResultadoResumen" | "Hallazgos" | "ObservacionClinica" | "CertificadoUbicacionSegura" | "EvaluadaEn" | "CerradaEn", ExtArgs["result"]["evaluacionOcupacional"]>
+export type EvaluacionOcupacionalOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"EvaluacionOcupacionalId" | "CitaId" | "ProfesionalId" | "ConceptoOcupacionalId" | "ResultadoResumen" | "Hallazgos" | "ObservacionClinica" | "CertificadoUbicacionSegura" | "TomaMedicamentos" | "MedicamentosRevisados" | "EvaluadaEn" | "CerradaEn", ExtArgs["result"]["evaluacionOcupacional"]>
 export type EvaluacionOcupacionalInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Cita?: boolean | Prisma.CitaDefaultArgs<ExtArgs>
   ConceptoOcupacional?: boolean | Prisma.EvaluacionOcupacional$ConceptoOcupacionalArgs<ExtArgs>
   Profesional?: boolean | Prisma.ProfesionalDefaultArgs<ExtArgs>
+  MedicamentoReportado?: boolean | Prisma.EvaluacionOcupacional$MedicamentoReportadoArgs<ExtArgs>
   Restriccion?: boolean | Prisma.EvaluacionOcupacional$RestriccionArgs<ExtArgs>
   _count?: boolean | Prisma.EvaluacionOcupacionalCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -1070,6 +1292,7 @@ export type $EvaluacionOcupacionalPayload<ExtArgs extends runtime.Types.Extensio
     Cita: Prisma.$CitaPayload<ExtArgs>
     ConceptoOcupacional: Prisma.$ConceptoOcupacionalPayload<ExtArgs> | null
     Profesional: Prisma.$ProfesionalPayload<ExtArgs>
+    MedicamentoReportado: Prisma.$MedicamentoReportadoPayload<ExtArgs>[]
     Restriccion: Prisma.$RestriccionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -1081,6 +1304,8 @@ export type $EvaluacionOcupacionalPayload<ExtArgs extends runtime.Types.Extensio
     Hallazgos: string | null
     ObservacionClinica: string | null
     CertificadoUbicacionSegura: string | null
+    TomaMedicamentos: boolean | null
+    MedicamentosRevisados: boolean | null
     EvaluadaEn: Date
     CerradaEn: Date | null
   }, ExtArgs["result"]["evaluacionOcupacional"]>
@@ -1426,6 +1651,7 @@ export interface Prisma__EvaluacionOcupacionalClient<T, Null = never, ExtArgs ex
   Cita<T extends Prisma.CitaDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.CitaDefaultArgs<ExtArgs>>): Prisma.Prisma__CitaClient<runtime.Types.Result.GetResult<Prisma.$CitaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   ConceptoOcupacional<T extends Prisma.EvaluacionOcupacional$ConceptoOcupacionalArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EvaluacionOcupacional$ConceptoOcupacionalArgs<ExtArgs>>): Prisma.Prisma__ConceptoOcupacionalClient<runtime.Types.Result.GetResult<Prisma.$ConceptoOcupacionalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   Profesional<T extends Prisma.ProfesionalDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ProfesionalDefaultArgs<ExtArgs>>): Prisma.Prisma__ProfesionalClient<runtime.Types.Result.GetResult<Prisma.$ProfesionalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  MedicamentoReportado<T extends Prisma.EvaluacionOcupacional$MedicamentoReportadoArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EvaluacionOcupacional$MedicamentoReportadoArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MedicamentoReportadoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   Restriccion<T extends Prisma.EvaluacionOcupacional$RestriccionArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.EvaluacionOcupacional$RestriccionArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RestriccionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1464,6 +1690,8 @@ export interface EvaluacionOcupacionalFieldRefs {
   readonly Hallazgos: Prisma.FieldRef<"EvaluacionOcupacional", 'String'>
   readonly ObservacionClinica: Prisma.FieldRef<"EvaluacionOcupacional", 'String'>
   readonly CertificadoUbicacionSegura: Prisma.FieldRef<"EvaluacionOcupacional", 'String'>
+  readonly TomaMedicamentos: Prisma.FieldRef<"EvaluacionOcupacional", 'Boolean'>
+  readonly MedicamentosRevisados: Prisma.FieldRef<"EvaluacionOcupacional", 'Boolean'>
   readonly EvaluadaEn: Prisma.FieldRef<"EvaluacionOcupacional", 'DateTime'>
   readonly CerradaEn: Prisma.FieldRef<"EvaluacionOcupacional", 'DateTime'>
 }
@@ -1829,6 +2057,30 @@ export type EvaluacionOcupacional$ConceptoOcupacionalArgs<ExtArgs extends runtim
    */
   include?: Prisma.ConceptoOcupacionalInclude<ExtArgs> | null
   where?: Prisma.ConceptoOcupacionalWhereInput
+}
+
+/**
+ * EvaluacionOcupacional.MedicamentoReportado
+ */
+export type EvaluacionOcupacional$MedicamentoReportadoArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MedicamentoReportado
+   */
+  select?: Prisma.MedicamentoReportadoSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MedicamentoReportado
+   */
+  omit?: Prisma.MedicamentoReportadoOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MedicamentoReportadoInclude<ExtArgs> | null
+  where?: Prisma.MedicamentoReportadoWhereInput
+  orderBy?: Prisma.MedicamentoReportadoOrderByWithRelationInput | Prisma.MedicamentoReportadoOrderByWithRelationInput[]
+  cursor?: Prisma.MedicamentoReportadoWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MedicamentoReportadoScalarFieldEnum | Prisma.MedicamentoReportadoScalarFieldEnum[]
 }
 
 /**
