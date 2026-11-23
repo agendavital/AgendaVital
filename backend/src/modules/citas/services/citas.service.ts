@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -14,11 +15,28 @@ import { CreateAppointmentDto } from '../dto/create-appointment.dto';
 export class CitasService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getFormOptions() {
+  async getFormOptions(userId: number, role: string) {
+    if (role !== 'ADMIN' && role !== 'HR') {
+      throw new ForbiddenException(
+        'Solo administración o recursos humanos pueden programar citas.',
+      );
+    }
     const now = new Date();
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: { EmpresaId: true },
+    });
+    if (!user) {
+      return { examRequests: [], clinics: [], initialStatusConfigured: false };
+    }
+    const requestScope =
+      role === 'HR'
+        ? { ProcesoOcupacional: { is: { EmpresaId: user.EmpresaId ?? -1 } } }
+        : {};
     const [requests, clinics, initialStatus] = await Promise.all([
       this.prisma.solicitudExamen.findMany({
         where: {
+          ...requestScope,
           EstadoSolicitud: { Codigo: 'SOLICITADA' },
           Cita: { is: null },
         },
@@ -84,7 +102,12 @@ export class CitasService {
     };
   }
 
-  async getAvailability(query: AvailabilityQueryDto) {
+  async getAvailability(query: AvailabilityQueryDto, role: string) {
+    if (role !== 'ADMIN' && role !== 'HR') {
+      throw new ForbiddenException(
+        'Solo administración o recursos humanos pueden consultar horarios para programar.',
+      );
+    }
     const from = new Date(query.from);
     const to = new Date(query.to);
     const now = new Date();
@@ -127,8 +150,31 @@ export class CitasService {
     }));
   }
 
-  async findAll(): Promise<AppointmentListItemDto[]> {
+  async findAll(
+    userId: number,
+    role: string,
+  ): Promise<AppointmentListItemDto[]> {
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: { EmpresaId: true, ClinicaId: true },
+    });
+    if (!user) return [];
+    const where =
+      role === 'ADMIN'
+        ? {}
+        : role === 'HR' && user.EmpresaId
+          ? {
+              SolicitudExamen: {
+                is: {
+                  ProcesoOcupacional: { is: { EmpresaId: user.EmpresaId } },
+                },
+              },
+            }
+          : (role === 'CLINIC' || role === 'DOCTOR') && user.ClinicaId
+            ? { Disponibilidad: { is: { ClinicaId: user.ClinicaId } } }
+            : { CitaId: -1n };
     const appointments = await this.prisma.cita.findMany({
+      where,
       orderBy: { Disponibilidad: { InicioEn: 'asc' } },
       select: this.appointmentSelect,
     });
@@ -136,7 +182,21 @@ export class CitasService {
     return appointments.map((appointment) => this.toListItem(appointment));
   }
 
-  async create(input: CreateAppointmentDto, createdByUserId: number) {
+  async create(
+    input: CreateAppointmentDto,
+    createdByUserId: number,
+    role: string,
+  ) {
+    if (role !== 'ADMIN' && role !== 'HR') {
+      throw new ForbiddenException(
+        'Solo administración o recursos humanos pueden programar citas.',
+      );
+    }
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: createdByUserId },
+      select: { EmpresaId: true, ClinicaId: true },
+    });
+    if (!user) throw new NotFoundException('No se encontró el usuario.');
     const examRequestId = BigInt(input.examRequestId);
     const availabilityId = BigInt(input.availabilityId);
     const now = new Date();
@@ -164,6 +224,7 @@ export class CitasService {
               TipoExamen: { select: { Nombre: true } },
               ProcesoOcupacional: {
                 select: {
+                  EmpresaId: true,
                   ProcesoOcupacionalId: true,
                   Candidato: {
                     select: {
@@ -196,6 +257,13 @@ export class CitasService {
           throw new BadRequestException(
             'La solicitud ya no está pendiente de programación.',
           );
+        }
+        if (
+          role === 'HR' &&
+          (!user.EmpresaId ||
+            request.ProcesoOcupacional.EmpresaId !== user.EmpresaId)
+        ) {
+          throw new NotFoundException('No se encontró la solicitud de examen.');
         }
         if (request.Cita) {
           throw new ConflictException(

@@ -3,11 +3,13 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { ROLE_LABELS, ROLES } from "../constants/roles";
 import { MODULES } from "../constants/navigation";
+import { hasPermission } from "../utils/permissions";
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const firstName = user.name.trim().split(/\s+/)[0];
   const availableModules = MODULES.filter(
-    (module) => module.key !== "dashboard" && module.roles.includes(user.role),
+    (module) => module.key !== "dashboard" && hasPermission(user, module.permission),
   );
   const isAdmin = user.role === ROLES.ADMIN;
 
@@ -22,7 +24,7 @@ export default function DashboardPage() {
         </div>
       </div>
       <Card>
-        <h2>Bienvenido, {user.name}</h2>
+        <h2>Bienvenido, {firstName}</h2>
         <p>Estos son los módulos disponibles para tu perfil.</p>
       </Card>
       <div className="metric-grid">

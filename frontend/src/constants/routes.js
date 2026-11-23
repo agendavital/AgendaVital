@@ -9,6 +9,8 @@ export const ROUTES = {
   appointments: "/appointments",
   clinicManagement: "/clinic-management",
   medicalStaff: "/medical-staff",
+  accessControl: "/access-control",
+  candidatePortal: "/my-process",
   documents: "/documents",
   medicalResults: "/medical-results",
   reports: "/reports",

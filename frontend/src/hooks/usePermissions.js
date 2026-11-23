@@ -5,6 +5,6 @@ export function usePermissions() {
   const { user } = useAuth();
 
   return {
-    can: (permission) => Boolean(user?.role && hasPermission(user.role, permission))
+    can: (permission) => hasPermission(user, permission)
   };
 }

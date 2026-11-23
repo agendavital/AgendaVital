@@ -4,7 +4,9 @@ import MainLayout from "../layouts/MainLayout";
 import PublicLayout from "../layouts/PublicLayout";
 import AppointmentsPage from "../pages/AppointmentsPage";
 import AuditPage from "../pages/AuditPage";
+import AccessControlPage from "../pages/AccessControlPage";
 import CandidatesPage from "../pages/CandidatesPage";
+import CandidatePortalPage from "../pages/CandidatePortalPage";
 import ClinicManagementPage from "../pages/ClinicManagementPage";
 import DashboardPage from "../pages/DashboardPage";
 import DocumentsPage from "../pages/DocumentsPage";
@@ -17,8 +19,7 @@ import NotificationsPage from "../pages/NotificationsPage";
 import ReportsPage from "../pages/ReportsPage";
 import ProcessesPage from "../pages/ProcessesPage";
 import ExamRequestsPage from "../pages/ExamRequestsPage";
-import { MODULE_ROLES } from "../constants/navigation";
-import { ROLES } from "../constants/roles";
+import { MODULE_PERMISSIONS } from "../constants/navigation";
 import ProtectedRoute from "./ProtectedRoute";
 import RoleRoute from "./RoleRoute";
 import ResetPasswordPage from "../pages/ResetPasswordPage";
@@ -45,7 +46,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.dashboard}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.dashboard}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.dashboard}>
               <DashboardPage />
             </RoleRoute>
           }
@@ -53,7 +54,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.candidates}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.candidates}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.candidates}>
               <CandidatesPage />
             </RoleRoute>
           }
@@ -61,7 +62,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.processes}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.processes}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.processes}>
               <ProcessesPage />
             </RoleRoute>
           }
@@ -69,7 +70,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.examRequests}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.examRequests}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.examRequests}>
               <ExamRequestsPage />
             </RoleRoute>
           }
@@ -77,7 +78,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.appointments}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.appointments}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.appointments}>
               <AppointmentsPage />
             </RoleRoute>
           }
@@ -85,7 +86,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.clinicManagement}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.clinicManagement}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.clinicManagement}>
               <ClinicManagementPage />
             </RoleRoute>
           }
@@ -93,7 +94,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.medicalStaff}
           element={
-            <RoleRoute allowedRoles={[ROLES.ADMIN]}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.medicalStaff}>
               <MedicalStaffPage />
             </RoleRoute>
           }
@@ -101,7 +102,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.audit}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.audit}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.audit}>
               <AuditPage />
             </RoleRoute>
           }
@@ -109,7 +110,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.documents}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.documents}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.documents}>
               <DocumentsPage />
             </RoleRoute>
           }
@@ -117,7 +118,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.medicalResults}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.medicalResults}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.medicalResults}>
               <MedicalResultsPage />
             </RoleRoute>
           }
@@ -125,7 +126,7 @@ export default function AppRouter() {
         <Route
           path={ROUTES.reports}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.reports}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.reports}>
               <ReportsPage />
             </RoleRoute>
           }
@@ -133,8 +134,24 @@ export default function AppRouter() {
         <Route
           path={ROUTES.notifications}
           element={
-            <RoleRoute allowedRoles={MODULE_ROLES.notifications}>
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.notifications}>
               <NotificationsPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.accessControl}
+          element={
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.accessControl}>
+              <AccessControlPage />
+            </RoleRoute>
+          }
+        />
+        <Route
+          path={ROUTES.candidatePortal}
+          element={
+            <RoleRoute requiredPermission={MODULE_PERMISSIONS.candidatePortal}>
+              <CandidatePortalPage />
             </RoleRoute>
           }
         />

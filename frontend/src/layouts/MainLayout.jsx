@@ -3,13 +3,14 @@ import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { ROLE_LABELS } from "../constants/roles";
 import { MODULES } from "../constants/navigation";
+import { hasPermission } from "../utils/permissions";
 import Button from "../components/ui/Button";
 
 export default function MainLayout() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
-  const visibleLinks = MODULES.filter((module) => module.roles.includes(user.role));
+  const visibleLinks = MODULES.filter((module) => hasPermission(user, module.permission));
 
   function handleLogout() {
     signOut();

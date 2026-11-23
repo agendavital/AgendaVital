@@ -117,8 +117,49 @@ export class CandidatesService {
     };
   }
 
-  async findAll(): Promise<CandidateListItemDto[]> {
+  async findAll(userId: number, role: string): Promise<CandidateListItemDto[]> {
+    const authUser = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: {
+        EmpresaId: true,
+        ClinicaId: true,
+        Candidato: { select: { CandidatoId: true } },
+      },
+    });
+    if (!authUser) return [];
+
+    let where = {};
+    if (role === 'HR') {
+      if (!authUser.EmpresaId) return [];
+      where = {
+        ProcesoOcupacional: { some: { EmpresaId: authUser.EmpresaId } },
+      };
+    } else if (role === 'CLINIC' || role === 'DOCTOR') {
+      if (!authUser.ClinicaId) return [];
+      where = {
+        ProcesoOcupacional: {
+          some: {
+            SolicitudExamen: {
+              some: {
+                Cita: {
+                  is: {
+                    Disponibilidad: { is: { ClinicaId: authUser.ClinicaId } },
+                  },
+                },
+              },
+            },
+          },
+        },
+      };
+    } else if (role === 'CANDIDATE') {
+      if (!authUser.Candidato) return [];
+      where = { CandidatoId: authUser.Candidato.CandidatoId };
+    } else if (role !== 'ADMIN') {
+      return [];
+    }
+
     const candidates = await this.prisma.candidato.findMany({
+      where,
       orderBy: { CreadoEn: 'desc' },
       select: {
         CandidatoId: true,

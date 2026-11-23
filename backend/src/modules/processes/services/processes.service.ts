@@ -12,8 +12,22 @@ import { ProcessListItemDto } from '../dto/process-list-item.dto';
 export class ProcessesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(): Promise<ProcessListItemDto[]> {
+  async findAll(userId: number, role: string): Promise<ProcessListItemDto[]> {
+    const authUser = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: { EmpresaId: true },
+    });
+    if (!authUser) return [];
+
+    const where =
+      role === 'ADMIN'
+        ? {}
+        : role === 'HR' && authUser.EmpresaId
+          ? { EmpresaId: authUser.EmpresaId }
+          : { EmpresaId: -1 };
+
     const processes = await this.prisma.procesoOcupacional.findMany({
+      where,
       orderBy: [{ FechaInicio: 'desc' }, { ProcesoOcupacionalId: 'desc' }],
       select: {
         ProcesoOcupacionalId: true,
@@ -46,10 +60,38 @@ export class ProcessesService {
     }));
   }
 
-  async getFormOptions() {
+  async getFormOptions(userId: number, role: string) {
+    const authUser = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: { EmpresaId: true },
+    });
+    if (!authUser) return { candidates: [], companies: [] };
+
+    const candidateWhere =
+      role === 'HR'
+        ? authUser.EmpresaId
+          ? {
+              OR: [
+                { ProcesoOcupacional: { none: {} } },
+                {
+                  ProcesoOcupacional: {
+                    some: { EmpresaId: authUser.EmpresaId },
+                  },
+                },
+              ],
+            }
+          : { CandidatoId: -1 }
+        : {};
+    const companyWhere =
+      role === 'HR'
+        ? { EmpresaId: authUser.EmpresaId ?? -1, Activa: true }
+        : { Activa: true };
     const [candidates, companies] = await Promise.all([
       this.prisma.candidato.findMany({
-        where: { Usuario: { is: { Activo: true } } },
+        where: {
+          ...candidateWhere,
+          Usuario: { is: { Activo: true } },
+        },
         select: {
           CandidatoId: true,
           TipoDocumento: true,
@@ -60,7 +102,7 @@ export class ProcessesService {
         },
       }),
       this.prisma.empresa.findMany({
-        where: { Activa: true },
+        where: companyWhere,
         select: {
           EmpresaId: true,
           Nit: true,
@@ -87,6 +129,25 @@ export class ProcessesService {
   }
 
   async create(input: CreateProcessDto, createdByUserId: number) {
+    const creator = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: createdByUserId },
+      select: {
+        EmpresaId: true,
+        UsuarioRol: { select: { Rol: { select: { Codigo: true } } } },
+      },
+    });
+    const isAdmin = creator?.UsuarioRol.some(({ Rol }) =>
+      ['ADMINISTRADOR', 'ADMIN'].includes(Rol.Codigo),
+    );
+    if (!creator) throw new NotFoundException('No se encontró el usuario.');
+    if (
+      !isAdmin &&
+      (!creator.EmpresaId || creator.EmpresaId !== input.companyId)
+    ) {
+      throw new NotFoundException(
+        'No se encontró la empresa asignada a tu perfil.',
+      );
+    }
     const [candidate, company, initialState] = await Promise.all([
       this.prisma.candidato.findUnique({
         where: { CandidatoId: input.candidateId },

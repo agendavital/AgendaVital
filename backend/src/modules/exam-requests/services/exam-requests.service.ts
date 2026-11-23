@@ -12,10 +12,22 @@ import { ExamRequestListItemDto } from '../dto/exam-request-list-item.dto';
 export class ExamRequestsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getFormOptions() {
+  async getFormOptions(userId: number, role: string) {
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: {
+        EmpresaId: true,
+        ClinicaId: true,
+        Candidato: { select: { CandidatoId: true } },
+      },
+    });
+    if (!user)
+      return { processes: [], examTypes: [], initialStatusConfigured: false };
+    const processScope = this.processScope(role, user);
     const [processes, examTypes, initialStatus] = await Promise.all([
       this.prisma.procesoOcupacional.findMany({
         where: {
+          ...processScope,
           EstadoProceso: { Codigo: { in: ['PENDIENTE', 'EN_PROCESO'] } },
         },
         orderBy: [{ FechaInicio: 'desc' }, { ProcesoOcupacionalId: 'desc' }],
@@ -57,8 +69,22 @@ export class ExamRequestsService {
     };
   }
 
-  async findAll(): Promise<ExamRequestListItemDto[]> {
+  async findAll(
+    userId: number,
+    role: string,
+  ): Promise<ExamRequestListItemDto[]> {
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: userId },
+      select: {
+        EmpresaId: true,
+        ClinicaId: true,
+        Candidato: { select: { CandidatoId: true } },
+      },
+    });
+    if (!user) return [];
+    const processScope = this.processScope(role, user);
     const requests = await this.prisma.solicitudExamen.findMany({
+      where: { ProcesoOcupacional: { is: processScope } },
       orderBy: [{ SolicitadaEn: 'desc' }, { SolicitudExamenId: 'desc' }],
       select: {
         SolicitudExamenId: true,
@@ -95,14 +121,36 @@ export class ExamRequestsService {
     }));
   }
 
-  async create(input: CreateExamRequestDto, requestedByUserId: number) {
+  async create(
+    input: CreateExamRequestDto,
+    requestedByUserId: number,
+    role: string,
+  ) {
     const processId = BigInt(input.processId);
+    const user = await this.prisma.usuario.findUnique({
+      where: { UsuarioId: requestedByUserId },
+      select: {
+        EmpresaId: true,
+        ClinicaId: true,
+        Candidato: { select: { CandidatoId: true } },
+      },
+    });
+    if (!user) throw new NotFoundException('No se encontró el usuario.');
     const [process, examTypes, initialStatus] = await Promise.all([
       this.prisma.procesoOcupacional.findUnique({
         where: { ProcesoOcupacionalId: processId },
         select: {
           ProcesoOcupacionalId: true,
+          EmpresaId: true,
+          CandidatoId: true,
           EstadoProceso: { select: { Codigo: true } },
+          SolicitudExamen: {
+            select: {
+              Cita: {
+                select: { Disponibilidad: { select: { ClinicaId: true } } },
+              },
+            },
+          },
         },
       }),
       this.prisma.tipoExamen.findMany({
@@ -119,6 +167,9 @@ export class ExamRequestsService {
     ]);
 
     if (!process) {
+      throw new NotFoundException('No se encontró el proceso ocupacional.');
+    }
+    if (!this.isProcessVisible(role, user, process)) {
       throw new NotFoundException('No se encontró el proceso ocupacional.');
     }
 
@@ -198,5 +249,60 @@ export class ExamRequestsService {
       status: request.EstadoSolicitud.Nombre,
       requestedAt: request.SolicitadaEn.toISOString(),
     }));
+  }
+
+  private processScope(
+    role: string,
+    user: {
+      EmpresaId: number | null;
+      ClinicaId: number | null;
+      Candidato: { CandidatoId: number } | null;
+    },
+  ) {
+    if (role === 'ADMIN') return {};
+    if (role === 'HR') return { EmpresaId: user.EmpresaId ?? -1 };
+    if (role === 'CANDIDATE')
+      return { CandidatoId: user.Candidato?.CandidatoId ?? -1 };
+    if (role === 'CLINIC' || role === 'DOCTOR') {
+      return {
+        SolicitudExamen: {
+          some: {
+            Cita: {
+              is: {
+                Disponibilidad: { is: { ClinicaId: user.ClinicaId ?? -1 } },
+              },
+            },
+          },
+        },
+      };
+    }
+    return { ProcesoOcupacionalId: -1n };
+  }
+
+  private isProcessVisible(
+    role: string,
+    user: {
+      EmpresaId: number | null;
+      ClinicaId: number | null;
+      Candidato: { CandidatoId: number } | null;
+    },
+    process: {
+      EmpresaId: number;
+      CandidatoId: number;
+      SolicitudExamen: {
+        Cita: { Disponibilidad: { ClinicaId: number } } | null;
+      }[];
+    },
+  ) {
+    if (role === 'ADMIN') return true;
+    if (role === 'HR') return user.EmpresaId === process.EmpresaId;
+    if (role === 'CANDIDATE')
+      return user.Candidato?.CandidatoId === process.CandidatoId;
+    if (role === 'CLINIC' || role === 'DOCTOR') {
+      return process.SolicitudExamen.some(
+        (request) => request.Cita?.Disponibilidad.ClinicaId === user.ClinicaId,
+      );
+    }
+    return false;
   }
 }

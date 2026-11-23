@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { usePermissions } from "../hooks/usePermissions";
 import Button from "../components/ui/Button";
 import DataTable from "../components/ui/DataTable";
 import Field from "../components/ui/Field";
@@ -41,6 +42,8 @@ function formatDateTime(value) {
 }
 
 export default function AppointmentsPage() {
+  const { can } = usePermissions();
+  const canBookAppointments = can("appointments:create");
   const [options, setOptions] = useState(emptyOptions);
   const [appointments, setAppointments] = useState([]);
   const [examRequestId, setExamRequestId] = useState("");
@@ -66,7 +69,10 @@ export default function AppointmentsPage() {
   useEffect(() => {
     let isMounted = true;
 
-    Promise.all([getAppointmentOptions(), getAppointments()])
+    Promise.all([
+      canBookAppointments ? getAppointmentOptions() : Promise.resolve(emptyOptions),
+      getAppointments(),
+    ])
       .then(([formOptions, rows]) => {
         if (!isMounted) return;
         setOptions(formOptions);
@@ -89,16 +95,12 @@ export default function AppointmentsPage() {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [canBookAppointments]);
 
   useEffect(() => {
-    setAvailabilityId("");
-    setSlots([]);
-    setSlotsError("");
     if (!clinicId || !date) return undefined;
 
     let isCurrentRequest = true;
-    setIsLoadingSlots(true);
     const range = getLocalDayRange(date);
 
     getAppointmentAvailability({ clinicId, ...range })
@@ -159,7 +161,7 @@ export default function AppointmentsPage() {
 
   const hasRequests = options.examRequests.length > 0;
   const hasClinics = options.clinics.length > 0;
-  const canBook = hasRequests && hasClinics && options.initialStatusConfigured;
+  const canBook = canBookAppointments && hasRequests && hasClinics && options.initialStatusConfigured;
 
   return (
     <section className="page-stack">
@@ -174,7 +176,7 @@ export default function AppointmentsPage() {
         </div>
       </div>
 
-      <form className="form appointments-form" onSubmit={handleSubmit}>
+      {canBookAppointments ? <form className="form appointments-form" onSubmit={handleSubmit}>
         <div className="appointments-form__heading">
           <p className="eyebrow">Nueva cita</p>
           <h2>Seleccionar atención y horario</h2>
@@ -237,7 +239,14 @@ export default function AppointmentsPage() {
                 <select
                   required
                   value={clinicId}
-                  onChange={(event) => setClinicId(event.target.value)}
+                  onChange={(event) => {
+                    const nextClinicId = event.target.value;
+                    setClinicId(nextClinicId);
+                    setAvailabilityId("");
+                    setSlots([]);
+                    setSlotsError("");
+                    setIsLoadingSlots(Boolean(nextClinicId && date));
+                  }}
                 >
                   <option value="">Selecciona una clínica</option>
                   {options.clinics.map((clinic) => (
@@ -255,7 +264,14 @@ export default function AppointmentsPage() {
                   type="date"
                   min={getTodayLocalDate()}
                   value={date}
-                  onChange={(event) => setDate(event.target.value)}
+                  onChange={(event) => {
+                    const nextDate = event.target.value;
+                    setDate(nextDate);
+                    setAvailabilityId("");
+                    setSlots([]);
+                    setSlotsError("");
+                    setIsLoadingSlots(Boolean(clinicId && nextDate));
+                  }}
                 />
               </Field>
             </div>
@@ -323,7 +339,15 @@ export default function AppointmentsPage() {
             </div>
           </>
         ) : null}
-      </form>
+      </form> : (
+        <section className="form appointments-form">
+          <div className="appointments-form__heading">
+            <p className="eyebrow">Agenda médica</p>
+            <h2>Consulta de citas</h2>
+            <p>Desde tu perfil puedes consultar las citas de los procesos asociados a tu empresa o clínica.</p>
+          </div>
+        </section>
+      )}
 
       {successMessage ? (
         <p className="alert alert-success" role="status">
